@@ -1,0 +1,107 @@
+    ODBX_CAP_BASIC: 1
+    ODBX_CAP_LO: 0
+    ODBX_OPT_API_VERSION: 10200 
+    ODBX_OPT_THREAD_SAFE: 1 
+    ODBX_OPT_TLS: 0 
+    ODBX_OPT_CONNECT_TIMEOUT: 1 (using)
+    ODBX_OPT_MULTI_STATEMENTS: 1 (using)
+    ODBX_OPT_PAGED_RESULTS: 0 
+    ODBX_OPT_COMPRESS: 0 
+    ODBX_CAP_BASIC: 1
+    ODBX_CAP_LO: 0
+    ODBX_OPT_API_VERSION: 10200 
+    ODBX_OPT_THREAD_SAFE: 1 
+    ODBX_OPT_TLS: 0 
+    ODBX_OPT_CONNECT_TIMEOUT: 1 (using)
+    ODBX_OPT_MULTI_STATEMENTS: 1 (using)
+    ODBX_OPT_PAGED_RESULTS: 0 
+    ODBX_OPT_COMPRESS: 0 
+    Affected rows: 0
+    Affected rows: 1
+    Affected rows: 1
+    Affected rows: 1
+    column 0 (type 16): i1 = '1'
+    column 1 (type 1): i16 = '2'
+    column 2 (type 2): i32 = '4'
+    column 3 (type 9): i64 = '8'
+    column 4 (type 9): d9 = '1.333'
+    column 5 (type 8): f4 = '4.5'
+    column 6 (type 8): f3 = '3.99'
+    column 7 (type 9): f8 = '8'
+    column 8 (type 16): c2 = 'EN'
+    column 9 (type 16): nc12 = 'aouaou      '
+    column 10 (type 16): str20 = 'varstring'
+    column 11 (type 16): nstr24 = 'aouaouaouaou'
+    column 12 (type 32): clob64k = 'clob'
+    column 13 (type 50): timeval = '1900-01-01 23:59:59'
+    column 14 (type 50): timestmp = '1999-01-01 00:00:00'
+    column 15 (type 50): dateval = '1999-01-01 00:00:00'
+    column 0 (type 16): i1 = NULL
+    column 1 (type 1): i16 = '2'
+    column 2 (type 2): i32 = '4'
+    column 3 (type 9): i64 = '8'
+    column 4 (type 9): d9 = '2.5'
+    column 5 (type 8): f4 = '4'
+    column 6 (type 8): f3 = '3.1'
+    column 7 (type 9): f8 = '8.5'
+    column 8 (type 16): c2 = 'FR'
+    column 9 (type 16): nc12 = 'éçèéçè'
+    column 10 (type 16): str20 = NULL
+    column 11 (type 16): nstr24 = 'éçèéçèéçèéçè'
+    column 12 (type 32): clob64k = 'text'
+    column 13 (type 50): timeval = '1900-01-01 15:00:00'
+    column 14 (type 50): timestmp = '2005-12-31 23:59:59'
+    column 15 (type 50): dateval = '2005-12-01 00:00:00'
+    Affected rows: 0
+    Affected rows: 0
+    column 0 (type 16): i1 = '0'
+    column 1 (type 1): i16 = '1000'
+    column 2 (type 2): i32 = '100000'
+    column 3 (type 9): i64 = '10000000'
+    column 4 (type 9): d9 = '12345.123'
+    column 5 (type 8): f4 = '10000.1'
+    column 6 (type 8): f3 = '100.1'
+    column 7 (type 9): f8 = '10000000.1'
+    column 8 (type 16): c2 = 'DE'
+    column 9 (type 16): nc12 = 'äöüäöü'
+    column 10 (type 16): str20 = 'first string'
+    column 11 (type 16): nstr24 = 'äöüäöüäöüäöü'
+    column 12 (type 32): clob64k = 'a very long text'
+    column 13 (type 50): timeval = '1900-01-01 15:00:00'
+    column 14 (type 50): timestmp = '2000-01-01 00:00:01'
+    column 15 (type 50): dateval = '2000-02-29 00:00:00'
+    column 0 (type 16): i1 = '1'
+    column 1 (type 1): i16 = '2'
+    column 2 (type 2): i32 = '4'
+    column 3 (type 9): i64 = '8'
+    column 4 (type 9): d9 = '1.333'
+    column 5 (type 8): f4 = '4.5'
+    column 6 (type 8): f3 = '3.99'
+    column 7 (type 9): f8 = '8'
+    column 8 (type 16): c2 = 'EN'
+    column 9 (type 16): nc12 = 'aouaou      '
+    column 10 (type 16): str20 = 'varstring'
+    column 11 (type 16): nstr24 = 'aouaouaouaou'
+    column 12 (type 32): clob64k = 'clob'
+    column 13 (type 50): timeval = '1900-01-01 23:59:59'
+    column 14 (type 50): timestmp = '1999-01-01 00:00:00'
+    column 15 (type 50): dateval = '1999-01-01 00:00:00'
+    column 0 (type 16): i1 = NULL
+    column 1 (type 1): i16 = '2'
+    column 2 (type 2): i32 = '4'
+    column 3 (type 9): i64 = '8'
+    column 4 (type 9): d9 = '2.5'
+    column 5 (type 8): f4 = '4'
+    column 6 (type 8): f3 = '3.1'
+    column 7 (type 9): f8 = '8.5'
+    column 8 (type 16): c2 = 'FR'
+    column 9 (type 16): nc12 = 'éçèéçè'
+    column 10 (type 16): str20 = NULL
+    column 11 (type 16): nstr24 = 'éçèéçèéçèéçè'
+    column 12 (type 32): clob64k = 'text'
+    column 13 (type 50): timeval = '1900-01-01 15:00:00'
+    column 14 (type 50): timestmp = '2005-12-31 23:59:59'
+    column 15 (type 50): dateval = '2005-12-01 00:00:00'
+    Affected rows: 2
+    column 0 (type 2): count = '1'
+    Affected rows: 0

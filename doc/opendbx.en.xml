@@ -1,0 +1,2128 @@
+<!DOCTYPE set PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+
+<set>
+	<title>OpenDBX</title>
+
+	<setinfo>
+		<author>
+			<firstname>Norbert</firstname>
+			<surname>Sendetzky</surname>
+			<email>norbert@linuxnetworks.de</email>
+		</author>
+	</setinfo>
+
+<book>
+	<title>OpenDBX reference pages</title>
+	<chapter>
+
+<refentry id="odbx_bind">
+
+	<refmeta>
+		<refentrytitle>odbx_bind</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_bind</refname>
+		<refname>odbx_bind_simple</refname>
+		<refpurpose>User authentication for a database connection</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_bind</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+				<paramdef>const char* <parameter>database</parameter></paramdef>
+				<paramdef>const char* <parameter>who</parameter></paramdef>
+				<paramdef>const char* <parameter>cred</parameter></paramdef>
+				<paramdef>int <parameter>method</parameter></paramdef>
+			</funcprototype>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_bind_simple</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+				<paramdef>const char* <parameter>database</parameter></paramdef>
+				<paramdef>const char* <parameter>who</parameter></paramdef>
+				<paramdef>const char* <parameter>cred</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_bind</function>() associates a connection created by <function>odbx_init</function>() to a specific database after the server verified and accepted the user credentials. All further operations will (normally) only affect the tables and records within this database. The operations may be limited to certain subset depending on the privileges granted to the given user account. If binding to the database instance succeeded, <function>odbx_bind</function>() also enables compatibility to the ANSI SQL standard if this is possible for the database server implementation.</para>
+
+		<para><function>odbx_bind_simple</function>() performs the same tasks as <function>odbx_bind</function>() but can't do anything else than simple user name / password authentication. It shouldn't be used in applications linking to the OpenDBX library version 1.1.1 or later and it will be removed from the library at a later stage.</para>
+
+		<para>Both functions accept almost the same parameters. The <parameter>handle</parameter> parameter always has to be a pointer to a valid connection object allocated by <function>odbx_init</function>(). The availability of certain options or the behavior of the connection associated to the given odbx_t pointer can be queried by calling <function>odbx_get_option</function>() respectively changed by <function>odbx_set_option</function>(). Changes must be done before calling <function>odbx_bind</function>() to take any effect. Examples of options are the thread-safetiness of the native database client library or the support for sending multiple statements at once.</para>
+
+		<para><parameter>database</parameter> is necessary to let the database server know which database should be used for executing all further requests. In combination with the authentication parameters <parameter>who</parameter> and <parameter>cred</parameter>, it usually allows or denies operations on tables and records within this database. Contrary to that, SQLite doesn't use <parameter>who</parameter> and <parameter>cred</parameter> but relies on the file system permissions instead to grant access to the whole database file. If they are used, the supplied values for all three parameters must be zero-terminated strings and should be in exactly the same character case as stored by the database manager. Otherwise, if they are unused they can also be NULL. Some database libraries also support default values provided by a configuration file if a parameter is NULL.</para>
+
+		<para><parameter>method</parameter> specifies the mechanism for authenticating a user account before it can perform operations on tables and records. Currently, all database backend modules only support the <symbol>ODBX_BIND_SIMPLE</symbol> method which provides basic user name / password authentication. In this case, the parameter <parameter>who</parameter> must be the name of an user account while <parameter>cred</parameter> has to be the password that belongs to the given account.</para>
+
+		<para>An already associated connection object can be detached from the database and rebound to the same database server. It is possible to bind it to another database, with another user account and other options set by detaching the connection object with <function>odbx_unbind</function>() first before invoking <function>odbx_bind</function>() with the same or with different parameters again.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_init</function>() returns <symbol>ODBX_ERR_SUCCESS</symbol>, or an error code whose value is less than zero if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_BACKEND</symbol></term>
+					<listitem>
+						<para>The backend module returned an error because it couldn't connect to the database or the authentication using the supplied parameters failed</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para>One of the supplied parameters is invalid or is NULL and this isn't allowed in the used backend module or in the native database client library</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_NOMEM</symbol></term>
+					<listitem>
+						<para>Allocating additionally required memory failed</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_SIZE</symbol></term>
+					<listitem>
+						<para>The length of a string exceeded the available buffer size</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_NOTSUP</symbol></term>
+					<listitem>
+						<para>The supplied authentication method is not supported by the backend module</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_error</function>()</member>
+				<member><function>odbx_error_type</function>()</member>
+				<member><function>odbx_init</function>()</member>
+				<member><function>odbx_query</function>()</member>
+				<member><function>odbx_unbind</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_capabilities">
+
+	<refmeta>
+		<refentrytitle>odbx_capabilities</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_capabilities</refname>
+		<refpurpose>Query implemented capabilities</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_capabilities</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+				<paramdef>unsigned int <parameter>cap</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_capabilities</function>() ask the backend associated to the connection object returned by <function>odbx_init</function>() if a certain capability set is implemented by this backend. All backends have to implement the basic capability set and may implement further predefined functional sets if they are supported by the native database client library. This function can be called at any stage after <function>odbx_init</function>() returned successfully.</para>
+
+		<para>The first parameter <parameter>handle</parameter> has to be the connection object created and returned by <function>odbx_init</function>(). It becomes invalid as soon as it was supplied to <function>odbx_finish</function>() and <function>odbx_capabilities</function>() will return an error in this case.</para>
+
+		<para><parameter>cap</parameter> is the number of the capability set as defined by macro constants in odbx.h. Valid constant names which can be supplied as second parameter to <function>odbx_capabilities</function>() are listed below:
+
+<variablelist>
+	<varlistentry>
+		<term>-<symbol>ODBX_CAP_BASIC</symbol></term>
+		<listitem>
+			<para>The core function set which have to be implemented by all backends. It consists of all functions necessary to connect to, send textual queries to and process simple results returned from the database server as well as error handling functions.</para>
+		</listitem>
+	</varlistentry>
+</variablelist>
+		</para>
+
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_capabilities</function>() returns <symbol>ODBX_ENABLE</symbol> if the requested capability is supported, <symbol>ODBX_DISABLE</symbol> if the capability is not supported or an error code whose value is less than zero if one of the supplied parameters is invalid. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para><parameter>handle</parameter> is NULL or the supplied connection object is invalid</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_error</function>()</member>
+				<member><function>odbx_error_type</function>()</member>
+				<member><function>odbx_init</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_column_count">
+
+	<refmeta>
+		<refentrytitle>odbx_column_count</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_column_count</refname>
+		<refpurpose>Get the number of columns in the current result set</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_column_count</function></funcdef>
+				<paramdef>odbx_result_t* <parameter>result</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>Returns the number of columns which belongs to the current result set allocated by <function>odbx_result</function>(). The number will never change within a result set with one notable exception: MySQL returns all outstanding rows of a previous result set first if they were not fetched completely by <function>odbx_row_fetch</function>() before. Therefore, the column count might change in this special situation. It is strongly advised to fetch all rows of a result set before calling <function>odbx_result</function>() again because other backends will return an error in this case.</para>
+
+		<para>The <parameter>result</parameter> parameter required by this function must be a valid result set returned by <function>odbx_result</function>() and must not has been feed to <function>odbx_result_finish</function>() before.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_column_count</function>() returns the number of columns/fields which are available in the current result set. The value depends on the column list being part of the SELECT query and it is zero if the query wasn't a SELECT-like query.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>This function will also return zero if the <parameter>result</parameter> parameter is invalid.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_column_name</function>()</member>
+				<member><function>odbx_column_type</function>()</member>
+				<member><function>odbx_result</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_column_name">
+
+	<refmeta>
+		<refentrytitle>odbx_column_name</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_column_name</refname>
+		<refpurpose>Get the name of a column in the current result set</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>char* <function>odbx_column_name</function></funcdef>
+				<paramdef>odbx_result_t* <parameter>result</parameter></paramdef>
+				<paramdef>unsigned long <parameter>pos</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_column_name</function>() gets the name of the column specified by pos in the current result set returned by <function>odbx_result</function>(). The column names will not change within the result set with the exception described for MySQL in <function>odbx_column_count</function>() when the first result set wasn't retrieved completely before <function>odbx_result</function>() was called again.</para>
+
+		<para>The <parameter>result</parameter> parameter required by this function must be a valid result set returned by <function>odbx_result</function>() and must not have been feed to <function>odbx_result_finish</function>() before.</para>
+
+		<para>Valid column indices for the requested column provided via <parameter>pos</parameter> start with zero and end with the value returned by <function>odbx_column_count</function>() minus one.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para>The return value of <function>odbx_column_name</function>() is a pointer to a zero terminated string which consists of the name of the requested column. This pointer is allocated by the database client library and must not be freed by the application. The content of the string may be overwritten by the next call to <function>odbx_column_name</function>()</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>Errors can occur if the given <parameter>result</parameter> parameter is NULL or invalid or if the value of <parameter>pos</parameter> is out of range, i.e. more than <function>odbx_column_count</function>() minus one.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_column_count</function>()</member>
+				<member><function>odbx_column_type</function>()</member>
+				<member><function>odbx_result</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_column_type">
+
+	<refmeta>
+		<refentrytitle>odbx_column_type</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_column_type</refname>
+		<refpurpose>Returns the SQL data type of a column in the current result set</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_column_type</function></funcdef>
+				<paramdef>odbx_result_t* <parameter>result</parameter></paramdef>
+				<paramdef>unsigned long <parameter>pos</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_column_type</function>() returns the data type of the requested column within the current result set returned by <function>odbx_result</function>(). The column type applies to all fields at the same position of the rows fetched via <function>odbx_row_fetch</function>(). The definitions are based on the SQL2003 standard and the data types of the database server have to comply to the specification of the standard. Data types provided by database implementations which are not covered by the SQL2003 standard are subsumed as <symbol>ODBX_TYPE_UNKNOWN</symbol>.</para>
+
+		<para>The <parameter>result</parameter> parameter required by this function must be a valid result set returned by <function>odbx_result</function>() and must not has been feed to <function>odbx_result_finish</function>() before.</para>
+
+		<para>Valid column indices for the requested column provided via <parameter>pos</parameter> start with zero and end with the value returned by <function>odbx_column_count</function>() minus one.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+		<para>If a values less than zero is returned, an error occurred. Possible error codes are listed in the error section and the application can retrieve a textual message of the error by calling <function>odbx_error</function>().</para>
+
+		<para>A positive return value including zero indicates one of the SQL2003 compliant data types listed below. Before release 1.1.5 of the OpenDBX library, types were defined as ODBX_* instead of ODBX_TYPE_*. The old definitions are kept for backward compatibility but shouldn't be used any more. They will be removed at some point in the future.</para>
+
+		<para>Exact numeric values:
+			<itemizedlist>
+				<listitem>
+					<para><symbol>ODBX_TYPE_BOOLEAN</symbol>: True/false values</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_SMALLINT</symbol>: Signed 16 bit integer</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_INTEGER</symbol>: Signed 32 bit integer</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_BIGINT</symbol>: Signed 64 bit integer</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_DECIMAL</symbol>: Exact signed numeric values with user defined precision</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>Approximate numeric values:
+			<itemizedlist>
+				<listitem>
+					<para><symbol>ODBX_TYPE_REAL</symbol>: Approximate numeric values (signed) with 32 bit precision</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_DOUBLE</symbol>: Approximate numeric values (signed) with 64 bit precision</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_FLOAT</symbol>: Approximate numeric values (signed) with user defined precision</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>String values:
+			<itemizedlist>
+				<listitem>
+					<para><symbol>ODBX_TYPE_CHAR</symbol>: Fixed number of characters</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_NCHAR</symbol>: Fixed number of characters using a national character set</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_VARCHAR</symbol>: Variable number of characters</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_NVARCHAR</symbol>: Variable number of characters using a national character set</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>Large objects:
+			<itemizedlist>
+				<listitem>
+					<para><symbol>ODBX_TYPE_CLOB</symbol>: Large text object</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_NCLOB</symbol>: Large text object using a national character set</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_XML</symbol>: XML tree in text format</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_BLOB</symbol>: Large binary object</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>Date and time values:
+			<itemizedlist>
+				<listitem>
+					<para><symbol>ODBX_TYPE_TIME</symbol>: Time including hours, minutes and seconds</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_TIME_TZ</symbol>: Time with timezone information</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_TIMESTAMP</symbol>: Date and time</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_TIMESTAMP_TZ</symbol>: Date and time with timezone information</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_DATE</symbol>: Date including year, month and day</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_INTERVAL</symbol>: Date interval</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>Arrays and sets:
+			<itemizedlist>
+				<listitem>
+					<para><symbol>ODBX_TYPE_ARRAY</symbol>: Array of values</para>
+				</listitem>
+				<listitem>
+					<para><symbol>ODBX_TYPE_MULTISET</symbol>: Associative arrays</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>External links:
+			<itemizedlist>
+				<listitem>
+					<para><symbol>ODBX_TYPE_DATALINK</symbol>: URI locators like URL links</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>Vendor specific:
+			<itemizedlist>
+				<listitem>
+					<para><symbol>ODBX_TYPE_UNKNOWN</symbol>: Vendor specific data type without representation in SQL2003</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_BACKEND</symbol></term>
+					<listitem>
+						<para>The native database library returned an error</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para>Either the <parameter>result</parameter> parameter is NULL respectively is invalid or the value of <parameter>pos</parameter> is out of range</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_column_count</function>()</member>
+				<member><function>odbx_column_name</function>()</member>
+				<member><function>odbx_field_value</function>()</member>
+				<member><function>odbx_result</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_error">
+
+	<refmeta>
+		<refentrytitle>odbx_error</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_error</refname>
+		<refpurpose>Returns a human readable error message</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>char* <function>odbx_error</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+				<paramdef>int <parameter>error</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_error</function>() returns an error string corresponding to the supplied error code or the error string generated by the native database library. Error strings originating from the backend modules or the native database client libraries are cleared as soon as the next odbx_*() function is called. All error strings are statically allocated and must not be changed or freed. If the OpenDBX library is compiled with native language support and the user environment variables are set accordingly to a supported language, strings which are part of the OpenDBX library are translated before being returned. This may also be the case for strings returned by the native database libraries but depends on their support.</para>
+
+		<para>The first parameter <parameter>handle</parameter> is the connection object created and returned by <function>odbx_init</function>() which becomes invalid as soon as it was supplied to <function>odbx_finish</function>(). Anyhow, it isn't necessary to supply a valid handle for errors which use error codes not equal to -<symbol>ODBX_ERR_BACKEND</symbol> because they are returned directly from a static error message array. Therefore, it's possible to use <function>odbx_error</function>() even if <function>odbx_init</function>() wasn't successful. If -<symbol>ODBX_ERR_BACKEND</symbol> is supplied in this case nevertheless, the return error string will be the same as for an invalid handle.</para>
+
+		<para>Almost all OpenDBX library functions return an <parameter>error</parameter> code if one of the operations couldn't be completed successfully. The codes returned use values less than zero to indicate different kind of errors and these values can be directly passed to <function>odbx_error</function>() to obtain the corresponding zero-terminated error string.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+		<para><function>odbx_error</function>() returns a zero-terminated string suitable for being displayed to the user of the application.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>If an backend error occurred and <parameter>handle</parameter> is NULL or the supplied connection object is invalid, <function>odbx_error</function>() returns the localized string for -<symbol>ODBX_ERR_PARAM</symbol>.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_error_type</function>()</member>
+				<member><function>odbx_init</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_error_type">
+
+	<refmeta>
+		<refentrytitle>odbx_error_type</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_error_type</refname>
+		<refpurpose>Returns the severity of an error</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_error_type</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+				<paramdef>int <parameter>error</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+		<para><function>odbx_error_type</function>() gives an indication about the severity of the error code returned by the last function call and supplied via the <parameter>error</parameter> parameter. It can be used to distinguish critical errors from warnings and enables an application to react appropriately. While applications usually can continue if warnings occur by informing the user and taking measures on the application logic level, severe errors always require to recreate the connection. On both cases, all errors returned are overwritten when the next odbx_*() function is called. This function is available since release 1.1.2.</para>
+
+		<para>Let's take <function>odbx_query</function>() (or any other function) as example, which returned an error. If the return value of odbx_error_type() is negative, you've hit a severe error like the connection to the server is broken. In this case you have to call <function>odbx_unbind</function>(), <function>odbx_finish</function>(), <function>odbx_init</function>() and <function>odbx_bind</function>() in this order to recreate the connection. Otherwise, if the return value was positive your statement might have been not understood by the database server. Here you can continue to send the next statement to the server without the need to recreate the connection.</para>
+
+		<para>The <parameter>handle</parameter> parameter is the connection object created and returned by <function>odbx_init</function>() if the call was successful and it becomes invalid as soon as it was supplied to <function>odbx_finish</function>(). Anyhow, it isn't necessary to supply a valid handle for errors which use error codes not equal to -<symbol>ODBX_ERR_BACKEND</symbol>. Therefore, it's possible to use <function>odbx_error_type</function>() even if <function>odbx_init</function>() returned an error. If -<symbol>ODBX_ERR_BACKEND</symbol> is supplied in this case nevertheless, the return value will indicate a critical error.</para>
+
+		<para>All values returned by odbx_*() functions can be feed directly via the <parameter>error</parameter> parameter into this function. If the given value doesn't indicate an error, the returned code will always be zero for successful completion. Negative values will be separated into classes for critical errors and warnings instead.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para>On success, i.e. if <symbol>ODBX_ERR_SUCCESS</symbol> or a positive value is supplied as value of <parameter>error</parameter>, the function returns zero. Otherwise, there will be positive and negative values returned, depending on the severity of the error occurred.</para>
+
+		<para>Positive values (values greater than zero) indicate recoverable errors which leave the database connection intact. An example might be a warning if a record couldn't be inserted into the table for any reason. In this case, further statements can be send to the database server and they are likely to succeed.</para>
+
+		<para>On the other hand, if negative values (values less than zero) are returned, there has happened a severe error in the backend module, the native database client library or the database server. The connection to the server might be lost or an out of memory condition might has been occurred. This means that all further calls to the OpenDBX library will probably fail and the only way to recover from this situation is to clean up the connection by using <function>odbx_unbind</function>() and <function>odbx_finish</function>() and trying to create a new connection from ground up.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>This function doesn't return any errors.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_finish</function>()</member>
+				<member><function>odbx_init</function>()</member>
+				<member><function>odbx_unbind</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_escape">
+
+	<refmeta>
+		<refentrytitle>odbx_escape</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_escape</refname>
+		<refpurpose>Prepare strings for inclusion in statements</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_escape</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+				<paramdef>const char* <parameter>from</parameter></paramdef>
+				<paramdef>unsigned long <parameter>fromlen</parameter></paramdef>
+				<paramdef>char* <parameter>to</parameter></paramdef>
+				<paramdef>unsigned long* <parameter>tolen</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_escape</function>() neutralizes potentially dangerous characters of the string so it can be used as part of a statement. For security reasons every user input has to be passed to <function>odbx_escape</function>() to avoid SQL injection attacks which can have fatal consequences! It's also a good idea to escape strings returned from database fields again if you want to use them in a query because they don't stay escaped once they are returned as part of a record.</para>
+
+		<para>Most backends require the buffer to be more than twice as long as the input string. To be precise, the output buffer must be 2 * size of input + 1 bytes long. After successfully escaping the characters in <parameter>from</parameter>, they are written into the memory provided via <parameter>to</parameter> and the value/result parameter <parameter>tolen</parameter> is updated to the new length of <parameter>to</parameter> in the end.</para>
+
+		<para>The first parameter <parameter>handle</parameter> is the connection object created and returned by <function>odbx_init</function>() which becomes invalid as soon as it was supplied to <function>odbx_finish</function>().</para>
+
+		<para><parameter>from</parameter> has to point to a character string containing the string which should be used as part of a statement. It doesn't have to be zero-terminated because the length of it is also given via <parameter>fromlen</parameter>. The backends may support variable width character sets like UTF-8 but this function doesn't support the wide char type (wchar_t) where each character has a fixed size of two or four bytes.</para>
+
+		<para>The value of the parameter <parameter>fromlen</parameter> must be the length in bytes of the string which <parameter>from</parameter> is pointing to. This is also true for variable width character sets like UTF-8 but the wide char type (wchar_t) is not supported. The terminating \0 character shouldn't be part of <parameter>fromlen</parameter>.</para>
+
+		<para>The calling function provides a buffer for storing the escaped string via <parameter>to</parameter>. In general, the length of the buffer should be more than twice as long as the string passed via <parameter>from</parameter> to be able to store the escaped string even if every character has to be escaped.</para>
+
+		<para><parameter>tolen</parameter> is a value-result parameter which points to an integer variable in the calling function. It must contain the original length of the buffer given via <parameter>to</parameter> and if escaping the string in <parameter>from</parameter> suceeded, <function>odbx_escape</function>() will store the new length of the escaped string in this variable.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_escape</function>() returns <symbol>ODBX_ERR_SUCCESS</symbol>, or an error code whose value is less than zero if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_BACKEND</symbol></term>
+					<listitem>
+						<para>The native database library returned an error because it wasn't able to escape the given string to be suitable for a statement</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para>One of the supplied parameters is invalid or is NULL and this isn't allowed in the used backend module or in the native database client library</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_SIZE</symbol></term>
+					<listitem>
+						<para>The length of the escaped string exceeds or is likely to exeed the available buffer (before 1.1.4 the name of the label was <symbol>ODBX_ERR_TOOLONG</symbol> but the value is still the same)</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_error</function>()</member>
+				<member><function>odbx_error_type</function>()</member>
+				<member><function>odbx_query</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_field_length">
+
+	<refmeta>
+		<refentrytitle>odbx_field_length</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_field_length</refname>
+		<refpurpose>Returns the length of a field value</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>unsigned long <function>odbx_field_length</function></funcdef>
+				<paramdef>odbx_result_t* <parameter>result</parameter></paramdef>
+				<paramdef>unsigned long <parameter>pos</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_field_length</function>() returns the length of the field value in bytes. The field is part of the current row which was retrieved by the latest call to <function>odbx_row_fetch</function>() and is specified by the column index given by <parameter>pos</parameter>.</para>
+
+		<para>The <parameter>result</parameter> parameter required by this function must be a valid result set returned by <function>odbx_result</function>() and must not has been feed to <function>odbx_result_finish</function>() before.</para>
+
+		<para>Valid column indices for the requested column provided via <parameter>pos</parameter> start with zero and end with the value returned by <function>odbx_column_count</function>() minus one.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para>The <function>odbx_field_length</function>() function provides the number of bytes of the specified field to the caller. If the field value consists of character data, the returned length will be without the terminating zero character. For binary values the exact size of the block as stored in the database is returned.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>This function will also return zero if the <parameter>result</parameter> parameter is invalid or if the value of <parameter>pos</parameter> is out of range.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_field_value</function>()</member>
+				<member><function>odbx_result</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_field_value">
+
+	<refmeta>
+		<refentrytitle>odbx_field_value</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_field_value</refname>
+		<refpurpose>Returns the data stored in a field</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>const char* <function>odbx_field_value</function></funcdef>
+				<paramdef>odbx_result_t* <parameter>result</parameter></paramdef>
+				<paramdef>unsigned long <parameter>pos</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_field_value</function>() returns a pointer to the field data specified by the column index <parameter>pos</parameter>. The field is part of the current row which was retrieved by the latest call to <function>odbx_row_fetch</function>().</para>
+
+		<para>All values except binary objects are handed back as strings terminated by the zero character. This does also apply to numeric values, dates, etc. They have to be converted to their binary machine dependent representation before arithmetic operations can be done. If a value is undefined, i.e. "NULL" is attached to the field in the database, an equivalent NULL pointer is returned.</para>
+
+		<para>The <parameter>result</parameter> parameter required by this function must be a valid result set returned by <function>odbx_result</function>() and must not has been feed to <function>odbx_result_finish</function>() before.</para>
+
+		<para>Valid column indices for the requested column provided via <parameter>pos</parameter> start with zero and end with the value returned by <function>odbx_column_count</function>() minus one.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para>The function provides the address pointing to the beginning of the field value where the string or binary object is stored in memory to the caller. It returns a NULL pointer if the field is a "NULL" value.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>This function will also return zero if the <parameter>result</parameter> parameter is invalid or if the value of <parameter>pos</parameter> is out of range.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_column_type</function>()</member>
+				<member><function>odbx_field_length</function>()</member>
+				<member><function>odbx_result</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_finish">
+
+	<refmeta>
+		<refentrytitle>odbx_finish</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_finish</refname>
+		<refpurpose>Frees connection resources</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_finish</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_finish</function>() is responsible for freeing all resources allocated by <function>odbx_init</function>() and finally may shut down the connection to the database server. It must not be invoked before calling <function>odbx_unbind</function>() to avoid memory leaks and open connection descriptors on the client and server side which may block necessary resources later on.</para>
+
+		<para>The <parameter>handle</parameter> parameter has to be the connection object created and returned by <function>odbx_init</function>(). It becomes invalid after it was supplied to <function>odbx_finish</function>() for the first time and the function will return an error for all further invocations.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_finish</function>() returns <symbol>ODBX_ERR_SUCCESS</symbol>, or an error code whose value is less than zero if <parameter>handle</parameter> is invalid or one of the operations couldn't be completed successfully by the backend module. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para><parameter>handle</parameter> is NULL or the supplied connection object is invalid</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_error</function>()</member>
+				<member><function>odbx_error_type</function>()</member>
+				<member><function>odbx_init</function>()</member>
+				<member><function>odbx_unbind</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_get_option">
+
+	<refmeta>
+		<refentrytitle>odbx_get_option</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_get_option</refname>
+		<refpurpose>Query backend for implemented options</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_get_option</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+				<paramdef>unsigned int <parameter>option</parameter></paramdef>
+				<paramdef>void* <parameter>value</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_get_option</function>() asks the backend module associated to <parameter>handle</parameter> by <function>odbx_init</function>() for implemented options and their current values. This function can be used at every stage as long as <parameter>handle</parameter> points to a valid connection object. Its primary use is to find out supported features of the backend module and to enable them with <function>odbx_set_option</function>() before the connection to the database server is established by calling <function>odbx_bind</function>().	</para>
+
+		<para>The first parameter <parameter>handle</parameter> is the connection object created and returned by <function>odbx_init</function>() which becomes invalid as soon as it was supplied to <function>odbx_finish</function>().</para>
+
+		<para>There are several <parameter>option</parameter> values defined as named constants in the odbx.h header file. A few of them are for informational purpose only while most of the options can also be set to different <parameter>option</parameter> values by <function>odbx_set_option</function>() to change the behavior of the backend module. The available options are:
+
+		<variablelist>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_API_VERSION</symbol></term>
+				<listitem>
+					<para>The API version implemented by the backend. Currently, it returns only zero and is reserved for the future</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_THREAD_SAFE</symbol></term>
+				<listitem>
+					<para>If it is safe to use this backend and especially the native database client library in an application which uses threads where more than one thread opens database connections via the OpenDBX library</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_TLS</symbol></term>
+				<listitem>
+					<para>The database client library may support transmitting all data securely by encrypting the network traffic via SSL or TLS</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_MULTI_STATEMENTS</symbol></term>
+				<listitem>
+					<para>The database server may be able to support multiple SQL statements in one query string sent via <function>odbx_query</function>()</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_PAGED_RESULTS</symbol></term>
+				<listitem>
+					<para>All database servers and client libraries are able to transfer the records row by row. Some of them can also transfer multiple rows or even all at once to minimize server load, network traffic and latency. The downside of this is an increased memory consumption</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_COMPRESS</symbol></term>
+				<listitem>
+					<para>Support of compressed network traffic between database client and server. This can lead to higher throughput if the network is the bottleneck</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_MODE</symbol></term>
+				<listitem>
+					<para>Some database servers support different modes of operation, e.g. modes for compliance to other SQL implementations or completely different query languages. This option is available since OpenDBX 1.1.4</para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+
+		<para><parameter>value</parameter> must be a pointer to an integer variable where the backend module will store the result for the supplied option. If it's not stated otherwise, the value assigned to the <parameter>value</parameter> parameter by <function>odbx_get_option</function>() will be of boolean nature and therefore is <symbol>ODBX_ENABLE</symbol> for a supported option or <symbol>ODBX_DISABLE</symbol> for an option which isn't supported.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_get_option</function>() returns <symbol>ODBX_ERR_SUCCESS</symbol>, or an error code whose value is less than zero if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para>One of the supplied parameters is invalid or is NULL and this isn't allowed in the used backend module or in the native database client library</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_OPTION</symbol></term>
+					<listitem>
+						<para>The value passed to the <parameter>option</parameter> parameter isn't one of the values listed in this manual. The content of <parameter>value</parameter> remains unchanged if this error occurs</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_bind</function>()</member>
+				<member><function>odbx_error</function>()</member>
+				<member><function>odbx_error_type</function>()</member>
+				<member><function>odbx_init</function>()</member>
+				<member><function>odbx_set_option</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_init">
+
+	<refmeta>
+		<refentrytitle>odbx_init</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_init</refname>
+		<refpurpose>Allocate per connection data structures</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_init</function></funcdef>
+				<paramdef>odbx_t** <parameter>handle</parameter></paramdef>
+				<paramdef>const char* <parameter>backend</parameter></paramdef>
+				<paramdef>const char* <parameter>host</parameter></paramdef>
+				<paramdef>const char* <parameter>port</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_init</function>() allocates and initializes an opaque object required for all further operations within the OpenDBX library which is used to identify the connection and to maintain per connection information. Depending on the backend it can open a connection to the database server but often this is done not until performing authentication through <function>odbx_bind</function>().</para>
+
+		<para>The pointer of the newly allocated connection object is stored in <parameter>handle</parameter> if <function>odbx_init</function>() completes successfully. Otherwise, the value of the <parameter>handle</parameter> variable will be undefined and must not be used as input for other functions of the library. The returned connection object must be freed by <function>odbx_finish</function>() to avoid memory leaks if it will be no longer used by the application.</para>
+
+		<para>The OpenDBX library provides access to several different database implementations through a single interface and therefore has to know which one of the available backend modules it should use for the operations. The <parameter>backend</parameter> parameter will be used to perform the lookup of the requested module. It has to be a zero-terminated ASCII string with all characters in in lower case. Currently, these backend modules are available:
+
+			<itemizedlist>
+				<listitem>
+					<para>firebird (Firebird/Interbase)</para>
+				</listitem>
+				<listitem>
+					<para>mssql (MS SQL Server via FreeTDS)</para>
+				</listitem>
+				<listitem>
+					<para>mysql (MySQL)</para>
+				</listitem>
+				<listitem>
+					<para>oracle (Oracle 8i/9i/10g)</para>
+				</listitem>
+				<listitem>
+					<para>pgsql (PostgreSQL)</para>
+				</listitem>
+				<listitem>
+					<para>sqlite (SQLite v2)</para>
+				</listitem>
+				<listitem>
+					<para>sqlite3 (SQLite v3)</para>
+				</listitem>
+				<listitem>
+					<para>sybase (Sybase ASE)</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+
+		<para>Connecting to a database server requires at least an identifier to know where the database is located. There are several kinds of identifiers like host names, IP addresses, named pipes, etc. which could be used. One of them can be provided via the <parameter>host</parameter> parameter and it is up to the native database library what it will accept. Most native libraries accept at least host names and IP addresses and also use the provided <parameter>port</parameter> in this case. The available methods for <parameter>host</parameter> are:
+
+			<variablelist>
+				<varlistentry>
+					<term>host name string</term>
+					<listitem>
+						<para>supported by Firebird/Interbase, MySQL, Oracle and PostgreSQL backends</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>IP address string</term>
+					<listitem>
+						<para>supported by Firebird/Interbase, MySQL, Oracle and PostgreSQL backends</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>absolute path to Unix domain socket</term>
+					<listitem>
+						<para>currently supported by the PostgreSQL backend only</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>(relative) directory path with trailing slash/backslash</term>
+					<listitem>
+						<para>required by SQLite and SQLite3 backends</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>section name in configuration file</term>
+					<listitem>
+						<para>required by MS SQL Server and Sybase ASE backends</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+
+Depending on the native database library, it's also possible to use database specific default values for the <parameter>host</parameter> and <parameter>port</parameter> parameters by supplying empty, zero-terminated strings or a NULL value.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_init</function>() returns <symbol>ODBX_ERR_SUCCESS</symbol>, or an error code whose value is less than zero if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_BACKEND</symbol></term>
+					<listitem>
+						<para>The backend module returned an error because it couldn't setup the necessary structures</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para><parameter>handle</parameter> is NULL and the allocated connection object can't be stored</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_NOMEM</symbol></term>
+					<listitem>
+						<para>Allocating new memory for the connection object failed</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_SIZE</symbol></term>
+					<listitem>
+						<para>The length of a string exceeded the available buffer size</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_NOTEXIST</symbol></term>
+					<listitem>
+						<para>A backend module with this name wasn't found. Either the module isn't installed, the given name was wrong or not in the correct character case</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_NOOP</symbol></term>
+					<listitem>
+						<para>The backend module doesn't provide the required function</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_bind</function>()</member>
+				<member><function>odbx_capabilities</function>()</member>
+				<member><function>odbx_error</function>()</member>
+				<member><function>odbx_finish</function>()</member>
+				<member><function>odbx_get_option</function>()</member>
+				<member><function>odbx_set_option</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_query">
+
+	<refmeta>
+		<refentrytitle>odbx_query</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_query</refname>
+		<refpurpose>Send a statement to the database server</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_query</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+				<paramdef>const char* <parameter>stmt</parameter></paramdef>
+				<paramdef>unsigned long <parameter>length</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>Sends the given statement to the database server associated to <parameter>handle</parameter> by <function>odbx_init</function>() for execution. The statement can contain non-displayable characters as arguments in conditions but they have to be escaped via <function>odbx_escape</function>() before adding them to the statement. Even more, every argument whose source is not controlled by the programmer must be escaped first to avoid SQL injection attacks to avoid serious harm!</para>
+
+		<para>After invoking <function>odbx_query</function>(), one or more result sets will be sent back by the server and are available via <function>odbx_result</function>(). Before these sets aren't processed by calling <function>odbx_row_fetch</function>(), no other queries can be sent to the database server. Otherwise, <function>odbx_query</function>() will return a backend error from the native database library.</para>
+
+		<para>The first parameter <parameter>handle</parameter> is the connection object created and returned by <function>odbx_init</function>() which becomes invalid as soon as it was supplied to <function>odbx_finish</function>().</para>
+
+		<para>The statement stored in the <parameter>stmt</parameter> parameter must be a valid statement understood by the receiving database server and it should be terminated by a \0 character. Some backends support multiple statements per query, which can be tested by calling <function>odbx_get_option</function>().</para>
+
+		<para>The <parameter>length</parameter> parameter must contain the length of the statement in bytes without the terminating \0 character. If variable sized character sets like UTF-8 are used, the same rule applies. This function doesn't support the wide character type (wchar_t) which uses two or four bytes per character. If you feed 0 (zero) as <parameter>length</parameter> parameter to the function, it will calculate the size of the statement on its own.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_query</function>() returns <symbol>ODBX_ERR_SUCCESS</symbol>, or an error code whose value is less than zero if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_BACKEND</symbol></term>
+					<listitem>
+						<para>The native database library returned an error because it wasn't able to handle the statement correctly</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para>Either <parameter>handle</parameter> or <parameter>stmt</parameter> are NULL or <parameter>handle</parameter> is invalid</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_NOMEM</symbol></term>
+					<listitem>
+						<para>Allocating the required memory for the statement failed</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_error</function>()</member>
+				<member><function>odbx_error_type</function>()</member>
+				<member><function>odbx_escape</function>()</member>
+				<member><function>odbx_result</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_result">
+
+	<refmeta>
+		<refentrytitle>odbx_result</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_result</refname>
+		<refpurpose>Retrieves a result set from the database server</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_result</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+				<paramdef>odbx_result_t** <parameter>result</parameter></paramdef>
+				<paramdef>struct timeval* <parameter>timeout</parameter></paramdef>
+				<paramdef>unsigned long <parameter>chunk</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>Retrieves the result of a query statement sent by <function>odbx_query</function>() from the database server. After a statement was successfully executed, a dynamically allocated object representing the result set is stored in <parameter>result</parameter> which must be freed afterwards by <function>odbx_result_finish</function>(). Result sets for SELECT-like statements returned successfully by this function can be processed by calling <function>odbx_row_fetch</function>() until all rows are retrieved. If the statement was an INSERT, UPDATE, DELETE or a similar statement, the number of affected rows is available via <function>odbx_rows_affected</function>().</para>
+
+		<para>If a timeout or error occurs, the <parameter>result</parameter> pointer is set to NULL. In case of a timeout, <function>odbx_result</function>() should be called again because the query isn't canceled. This function must be called multiple times until it returns zero, even if the query contains only one statement. Otherwise, memory will be leaked and <function>odbx_query</function>() will return an error.</para>
+
+		<para>The third parameter (<parameter>timeout</parameter>) restricts the time the function is waiting for a result form the server. It may be NULL to wait until a result arrives. Otherwise, it can contain any number of seconds and microseconds in a timeval structure to wait for. The timeval structure must be set each time before calling <function>odbx_result</function>() because its content may get changed by the function. If the server doesn't respond within the timeout, the query isn't canceled! Instead, the next call to this function will wait for the same result set. Waiting the specified time may be implemented in the backends if it is possible, but there is no guarantee. If not, <function>odbx_result</function>() will return not before a responds arrives.</para>
+
+		<para>Dependent on the native database library, it may be possible to retrieve all rows at once (if <parameter>chunk</parameter> is zero), one by one or more than one row at once. All positive values including zero are allowed as values for <parameter>chunk</parameter> If paging (more than one row at once) is not supported by the backend, it will use "one by one" or "all at once" if this is the only option provided.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_result</function>() returns <symbol>ODBX_RES_ROWS</symbol> ("3") if a result set is available and zero if no more results will be returned for the last query string sent via <function>odbx_query</function>() successfully. <symbol>ODBX_RES_NOROWS</symbol> ("2") is returned if the statement was executed successfully but will not return a results set (like for INSERT, UPDATE and DELETE statements) and <symbol>ODBX_RES_TIMEOUT</symbol> ("1") indicates a timeout. As soon as <symbol>ODBX_RES_DONE</symbol> ("0") is returned, the available result sets were processed. The named constants are available since OpenDBX 1.3.2 and the numbers in brackets have to be used instead if a previous release is is the basis for the application development.</para>
+
+		<para>It returns an error code whose value is less than zero if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details. In this case, the backends are responsible for freeing the data structures they allocated inside the function and to clear the errornous result set if there's one available. The backends will also set the given result pointer to NULL before returning the error. Nevertheless, if a non-fatal error occurred it's possible to retrieve further result sets and this is necessary before calling <function>odbx_query</function>() on the same connection again.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_BACKEND</symbol></term>
+					<listitem>
+						<para>The native database library returned an error</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para>Either <parameter>handle</parameter> or <parameter>result</parameter> are NULL or <parameter>handle</parameter> is invalid</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_NOMEM</symbol></term>
+					<listitem>
+						<para>Allocating the required memory for the result failed</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_RESULT</symbol></term>
+					<listitem>
+						<para>Waiting for a response from the server failed because the connection was lost</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_column_count</function>()</member>
+				<member><function>odbx_column_name</function>()</member>
+				<member><function>odbx_column_type</function>()</member>
+				<member><function>odbx_rows_affected</function>()</member>
+				<member><function>odbx_row_fetch</function>()</member>
+				<member><function>odbx_result_finish</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_result_finish">
+
+	<refmeta>
+		<refentrytitle>odbx_result_finish</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_result_finish</refname>
+		<refname>odbx_result_free</refname>
+		<refpurpose>Closes the result set and frees its allocated memory</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_result_finish</function></funcdef>
+				<paramdef>odbx_result_t* <parameter>result</parameter></paramdef>
+			</funcprototype>
+
+			<funcprototype>
+				<funcdef>void <function>odbx_result_free</function></funcdef>
+				<paramdef>odbx_result_t* <parameter>result</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_result_finish</function>() closes the result set which may also include dropping the non-fetched rows sent by the server. It releases all resources allocated by <function>odbx_result</function>() and by the native database library which are attached to <parameter>result</parameter> as well as the memory the first parameter is pointing to. Trying to free <parameter>result</parameter> manually using free() will create memory leaks because it contains more dynamically allocated structures and also the memory of the result set allocated by the native database library. <function>odbx_result_finish</function>() must be called even if the statement was not a SELECT-like statement which returned now rows as it may be necessary to commit the changes done by the statement.</para>
+
+		<para><function>odbx_result_free</function>() performs the same tasks as <function>odbx_result_finish</function>() but is unable to return an error if the task couln't be completed. It shouldn't be used in applications linking to the OpenDBX library version 1.3.8 or later and it will be removed from the library at a later stage.</para>
+
+		<para><parameter>result</parameter> must be valid a result set created by <function>odbx_result</function>() which is returned via its second parameter. After feeding it to <function>odbx_result_finish</function>() it becomes invalid and must not be feed to it again. Otherwise a "double free" may occur and the application may be terminated.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+		<para><function>odbx_result_finish</function>() returns <symbol>ODBX_ERR_SUCCESS</symbol>, or an error code whose value is less than zero if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_BACKEND</symbol></term>
+					<listitem>
+						<para>The native database library returned an error</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para>The <parameter>result</parameter> parameter is invalid</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_result</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_rows_affected">
+
+	<refmeta>
+		<refentrytitle>odbx_rows_affected</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_rows_affected</refname>
+		<refpurpose>Returns the number of changed records</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>uint64_t <function>odbx_rows_affected</function></funcdef>
+				<paramdef>odbx_result_t* <parameter>result</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>Returns the number of rows that have been changed by the current statement whose result set was retrieved by <function>odbx_result</function>(). Affected rows are only returned for DELETE, INSERT or UPDATE statements and their concrete number depends on the database implementation. Instead returning the number of rows which are matched by the WHERE clause, MySQL for example does only count the rows whose values have really been changed.</para>
+
+		<para>The <parameter>result</parameter> parameter required by this function must be a valid result set returned by <function>odbx_result</function>() and must not has been feed to <function>odbx_result_finish</function>() before.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_rows_affected</function>() returns the number of changed rows on success and zero if the database server didn't alter any rows. A value of zero can be returned if the statement doesn't match any rows. Some database server like MySQL may return a lower number than expected because they doesn't modify records whose values wouldn't change.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>This function will also return zero if the <parameter>result</parameter> parameter is invalid.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_result</function>()</member>
+				<member><function>odbx_result_finish</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_row_fetch">
+
+	<refmeta>
+		<refentrytitle>odbx_row_fetch</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_row_fetch</refname>
+		<refpurpose>Retrieve rows from the result set</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_row_fetch</function></funcdef>
+				<paramdef>odbx_result_t* <parameter>result</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>Retrieves the values of a row from the current result set returned by <function>odbx_result</function>(). Until this function is invoked, no row and field data is available via <function>odbx_field_length</function>() or <function>odbx_field_value</function>() and these functions will return zero respectively NULL.</para>
+
+		<para>Moreover, it is necessary to fetch all rows from a result set until zero is returned indicating that no more rows are available. Otherwise - depending on the backend - an error may occur after calling <function>odbx_result</function>() the next time or the outstanding rows will be returned within the next result.</para>
+
+		<para><function>odbx_row_fetch</function>() requires a valid <parameter>result</parameter> object which was created by <function>odbx_result</function>(). It must not have been feed to <function>odbx_result_finish</function>() before.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_row_fetch</function>() will return <symbol>ODBX_ROW_NEXT</symbol> ("1") as long as rows are available from the result set. After the last row has been made available, further calls to this function will return <symbol>ODBX_ROW_DONE</symbol> ("0") indicating that the result set doesn't contain more rows. The named constants are available since OpenDBX 1.3.2 and the numbers in brackets have to be used instead if a previous release is is the basis for the application development.</para>
+
+		<para>In case of an error, values less than zero are returned encodeing the reason why the error occurred.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para>The <parameter>result</parameter> parameter is either NULL or the object is invalid. This is usually the case if result has been already feed to <function>odbx_result_finish</function>().</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_column_count</function>()</member>
+				<member><function>odbx_column_name</function>()</member>
+				<member><function>odbx_column_type</function>()</member>
+				<member><function>odbx_error</function>()</member>
+				<member><function>odbx_error_type</function>()</member>
+				<member><function>odbx_field_length</function>()</member>
+				<member><function>odbx_field_value</function>()</member>
+				<member><function>odbx_result</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_set_option">
+
+	<refmeta>
+		<refentrytitle>odbx_set_option</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_set_option</refname>
+		<refpurpose>Change behaviour of the database backend</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_set_option</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+				<paramdef>unsigned int <parameter>option</parameter></paramdef>
+				<paramdef>void* <parameter>value</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>Changes the value of the specified option in the backend module or the native database library associated to handle by <function>odbx_init</function>(). Before trying to set an option, it should be tested with <function>odbx_get_option</function>() first to ensure that it is supported by the backend. Almost all options need to be set before connecting to the database server using <function>odbx_bind</function>() to take any effect.</para>
+
+		<para>The first parameter <parameter>handle</parameter> is the connection object created and returned by <function>odbx_init</function>() which becomes invalid as soon as it was supplied to <function>odbx_finish</function>().</para>
+
+		<para>There are several <parameter>option</parameter> values defined as named constants in the odbx.h header file. The available options whose values can be changed are:
+
+		<variablelist>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_TLS</symbol></term>
+				<listitem>
+					<para>Use encryption to transmit all data securely over the network via SSL or TLS. This option can be set to <symbol>ODBX_TLS_NEVER</symbol> (the default value) to prevent encrpytion, <symbol>ODBX_TLS_ALWAYS</symbol> to enforce encryption and to fail if it can't be used between the client library and the server or <symbol>ODBX_TLS_TRY</symbol> to use encryption if possible with the option to fall back to a connection which isn't encrypted.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_MULTI_STATEMENTS</symbol></term>
+				<listitem>
+					<para>Enables the database server to accept multiple statements in one query string sent via <function>odbx_query</function>() if the value of value is set to <symbol>ODBX_ENABLE</symbol>. Although, it might be possible to disable it by setting it to <symbol>ODBX_DISABLE</symbol>.</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_PAGED_RESULTS</symbol></term>
+				<listitem>
+					<para>All database servers and client libraries are able to transfer the records row by row. Some of them can also transfer multiple rows or even all at once to minimize server load, network traffic and latency. The downside of this is an increased memory consumption. If paged results are supported by the backend, passing positive values will fetch the specified number of records at once from the database server. The value of zero ("0") is special in this case because it asks the backend module to retrieve all records at once</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_COMPRESS</symbol></term>
+				<listitem>
+					<para>Enable compressed network traffic between database client and server. This can maximize the throughput if the network is the bottleneck. Pass an integer variable with <symbol>ODBX_ENABLE</symbol> to enable compression or with <symbol>ODBX_DISABLE</symbol> to disable it for this connection</para>
+				</listitem>
+			</varlistentry>
+			<varlistentry>
+				<term><symbol>ODBX_OPT_MODE</symbol></term>
+				<listitem>
+					<para>Some database servers support different modes of operation, e.g. modes for compliance to other SQL implementations or completely different query languages. This option is available since OpenDBX 1.1.4. <parameter>value</parameter> must point to a zero terminated string and for a detailed description of the MySQL modes look at their <ulink url="http://dev.mysql.com/doc/refman/5.0/en/server-sql-mode.html">website</ulink></para>
+				</listitem>
+			</varlistentry>
+		</variablelist>
+		</para>
+
+		<para>If not stated otherwise, the type of the variable passed to the third parameter <parameter>value</parameter> must be an integer pointer. Its values should be in the range specified by the option being changed.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_set_option</function>() returns <symbol>ODBX_ERR_SUCCESS</symbol>, or an error code whose value is less than zero if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para>One of the supplied parameters is invalid or is NULL and this isn't allowed in the used backend module or in the native database client library</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_OPTION</symbol></term>
+					<listitem>
+						<para>The value passed to the <parameter>option</parameter> parameter isn't one of the values listed in this manual. The content of <parameter>value</parameter> remains unchanged if this error occurs</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_OPTRO</symbol></term>
+					<listitem>
+						<para>The option isn't intended for being changed and could only be read via <function>odbx_get_option</function>()</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_OPTWR</symbol></term>
+					<listitem>
+						<para>Setting the option failed for various reasons. It's most likely that the value passed via <parameter>value</parameter> didn't match the range of values expected by the backend or the native database library</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_bind</function>()</member>
+				<member><function>odbx_error</function>()</member>
+				<member><function>odbx_get_option</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_unbind">
+
+	<refmeta>
+		<refentrytitle>odbx_unbind</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_unbind</refname>
+		<refpurpose>Disconnects from the database</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_unbind</function></funcdef>
+				<paramdef>odbx_t* <parameter>handle</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>Releases the binding of the connection to the database and user associated by <function>odbx_bind</function>() to the supplied connection object. This is useful for switching to a different database or binding to the database with different credentials. It is also possible to set new connection related options before rebinding to the database server. If an open transaction exists while this function is executed in the firebird backend, it will be committed to the database and closed. The behavior of the other backends for open transactions may vary.</para>
+
+		<para>It's necessary to process all result sets returned by the database server before using this function. Otherwise, it might return an error depending on the native database client library and the backend module. This function must be invoked before calling <function>odbx_finish</function>() to avoid memory leaks and connections left open which may block necessary resources later on.</para>
+
+		<para>The <parameter>handle</parameter> parameter has to be the connection object created and returned by <function>odbx_init</function>(). It becomes invalid after it was supplied to <function>odbx_finish</function>() and <function>odbx_unbind</function>() will return an error in this case.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_unbind</function>() returns <symbol>ODBX_ERR_SUCCESS</symbol>, or an error code whose value is less than zero if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_PARAM</symbol></term>
+					<listitem>
+						<para><parameter>handle</parameter> is NULL or the supplied connection object is invalid</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_bind</function>()</member>
+				<member><function>odbx_error</function>()</member>
+				<member><function>odbx_finish</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+
+
+<!-- Large object functions -->
+
+
+<refentry id="odbx_lo_open">
+
+	<refmeta>
+		<refentrytitle>odbx_lo_open</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_lo_open</refname>
+		<refpurpose>Opens a large object in the database</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_lo_open</function></funcdef>
+				<paramdef>odbx_result_t* <parameter>result</parameter></paramdef>
+				<paramdef>odbx_lo_t** <parameter>lo</parameter></paramdef>
+				<paramdef>const char* <parameter>value</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>Some database management systems store large amount of data in separate regions of the database and the content is only referenced by identifiers in the tables. The data types used for this are called Binary Large OBject (BLOB) and Character Large OBject (CLOB) and can be found in e.g. the Firebird and Oracle database servers. The OpenDBX library provides a large object interface to access, read and write their content via the "odbx_lo_*()" functions. To find out if large amount of data can be accessed directly or if the large object interface have to be used, <function>odbx_capabilities</function>() provides the answer when feed with the <symbol>ODBX_CAP_LO</symbol></para>
+
+		<para>The <parameter>result</parameter> parameter has to be the result object created and returned by <function>odbx_result</function>(). It becomes invalid after it was supplied to <function>odbx_result_finish</function>() and this function will return an error in that case. The second parameter, the pointer to a <symbol>odbx_lo_t</symbol>*, will contain the newly created large object handle if <function>odbx_lo_open</function>() succeeds. The <parameter>lo</parameter> handle is necessary for all other functions of the large object interface so they are able to perform their operations on the referenced content. The last parameter must be the return value of <function>odbx_field_value</function>() but you have to check for <symbol>NULL</symbol> values before feeding the value to <function>odbx_lo_open</function>(). Otherwise, an error is returned.</para>
+
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_lo_open</function>() returns <symbol>ODBX_ERR_SUCCESS</symbol>, or an error code whose value is less than zero if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_BACKEND</symbol></term>
+					<listitem>
+						<para>The native database library couldn't open the large object</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_NOMEM</symbol></term>
+					<listitem>
+						<para>Allocating additionally required memory failed</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_capabilities</function>()</member>
+				<member><function>odbx_field_value</function>()</member>
+				<member><function>odbx_lo_close</function>()</member>
+				<member><function>odbx_lo_read</function>()</member>
+				<member><function>odbx_lo_write</function>()</member>
+				<member><function>odbx_result</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_lo_close">
+
+	<refmeta>
+		<refentrytitle>odbx_lo_close</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_lo_close</refname>
+		<refpurpose>Closes a large object reference</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>int <function>odbx_lo_close</function></funcdef>
+				<paramdef>odbx_lo_t* <parameter>lo</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>This function commits any changes made by <function>odbx_lo_write</function>() and closes the open large object handle. To ommit calling this function on open large object handles will result in memory leaks as the data structure and dependent memory aren't freed.</para>
+
+		<para>The <parameter>lo</parameter> parameter has to be the large object handle created and returned by <function>odbx_lo_open</function>() via its second parameter. It becomes invalid after it was supplied to <function>odbx_lo_close</function>() and this function will return an error in this case.</para>
+
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_lo_close</function>() returns <symbol>ODBX_ERR_SUCCESS</symbol>, or an error code whose value is less than zero if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_BACKEND</symbol></term>
+					<listitem>
+						<para>The native database library couldn't close the large object successfully</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_HANDLE</symbol></term>
+					<listitem>
+						<para><parameter>lo</parameter> is NULL or the supplied large object handle is invalid</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_lo_open</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_lo_read">
+
+	<refmeta>
+		<refentrytitle>odbx_lo_read</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_lo_read</refname>
+		<refpurpose>Reads content from a large object</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>ssize_t <function>odbx_lo_read</function></funcdef>
+				<paramdef>odbx_lo_t* <parameter>lo</parameter></paramdef>
+				<paramdef>void* <parameter>buffer</parameter></paramdef>
+				<paramdef>size_t <parameter>buflen</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para>To get the content of a large object, <function>odbx_lo_read</function>() fetches the data in one or more pieces from the server and stores it into the user supplied <parameter>buffer</parameter>. After opening the large object using <function>odbx_lo_open</function>(), the first call to <function>odbx_lo_read</function>() will return the bytes from the beginning. The second and all other calls will store subsequent parts of the large object content into the <parameter>buffer</parameter> until the end of the data is reached. To reread the content a second time, you have to close the large object handle and reopen it again as some databases provide no way to reposition the internal file position indicator for the stream.</para>
+
+		<para>The <parameter>lo</parameter> parameter has to be the large object handle created and returned by <function>odbx_lo_open</function>() via its second parameter. It becomes invalid after it was supplied to <function>odbx_lo_close</function>() and this function will return an error in this case. The large object content fetched from the server is stored into the user supplied <parameter>buffer</parameter> up to <parameter>buflen</parameter> bytes.</para>
+
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_lo_read</function>() returns the number of bytes placed into <parameter>buffer</parameter>, which may be up to <parameter>buflen</parameter> bytes. If the end of the content is reached and no more data is available, the return value will be 0. On error, a code whose value is less than zero is returned if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_BACKEND</symbol></term>
+					<listitem>
+						<para>The native database library couldn't read from the large object</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_HANDLE</symbol></term>
+					<listitem>
+						<para><parameter>lo</parameter> is NULL or the supplied large object handle is invalid</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_lo_open</function>()</member>
+				<member><function>odbx_lo_close</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+<refentry id="odbx_lo_write">
+
+	<refmeta>
+		<refentrytitle>odbx_lo_write</refentrytitle>
+		<manvolnum>3</manvolnum>
+	</refmeta>
+
+	<refnamediv>
+		<refname>odbx_lo_write</refname>
+		<refpurpose>Writes buffer content into the large object</refpurpose>
+	</refnamediv>
+
+	<refsynopsisdiv>
+
+		<funcsynopsis>
+			<funcsynopsisinfo>#include &lt;opendbx/api.h&gt;</funcsynopsisinfo>
+
+			<funcprototype>
+				<funcdef>ssize_t <function>odbx_lo_write</function></funcdef>
+				<paramdef>odbx_lo_t* <parameter>lo</parameter></paramdef>
+				<paramdef>void* <parameter>buffer</parameter></paramdef>
+				<paramdef>size_t <parameter>buflen</parameter></paramdef>
+			</funcprototype>
+
+		</funcsynopsis>
+
+	</refsynopsisdiv>
+
+	<refsect1>
+		<title>Description</title>
+
+		<para><function>odbx_lo_write</function>() sends the data supplied in <parameter>buffer</parameter> to the server for storing it inside the large object. The function can be called more than once to add subsequent parts of the content to the object. If it isn't a new or empty object, the existing data will be overwritten and truncated to the new size. It's not possible to update only parts of the content as some databases doesn't support to position the internal file position indicator.</para>
+
+		<para>The <parameter>lo</parameter> parameter has to be the large object handle created and returned by <function>odbx_lo_open</function>() via its second parameter. It becomes invalid after it was supplied to <function>odbx_lo_close</function>() and this function will return an error in this case. The data which should be send to the server is read from <parameter>buffer</parameter> up to <parameter>buflen</parameter> bytes.</para>
+
+	</refsect1>
+
+	<refsect1>
+		<title>Return value</title>
+
+		<para><function>odbx_lo_write</function>() returns the number of bytes read from <parameter>buffer</parameter> and sent to the database server, which may be up to <parameter>buflen</parameter> bytes. It isn't guaranteed that the complete chunk was sent to the server, so the returned size may be less than the value in <parameter>buflen</parameter>. On error, a code whose value is less than zero is returned if one of the operations couldn't be completed successfully. Possible error codes are listed in the error section and they can be feed to <function>odbx_error</function>() and <function>odbx_error_type</function>() to get further details.</para>
+	</refsect1>
+
+	<refsect1>
+		<title>Errors</title>
+		<para>
+			<variablelist>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_BACKEND</symbol></term>
+					<listitem>
+						<para>The native database library couldn't write to the large object successfully</para>
+					</listitem>
+				</varlistentry>
+				<varlistentry>
+					<term>-<symbol>ODBX_ERR_HANDLE</symbol></term>
+					<listitem>
+						<para><parameter>lo</parameter> is NULL or the supplied large object handle is invalid</para>
+					</listitem>
+				</varlistentry>
+			</variablelist>
+		</para>
+	</refsect1>
+
+	<refsect1>
+		<title>See also</title>
+		<para>
+			<simplelist type='inline'>
+				<member><function>odbx_lo_open</function>()</member>
+				<member><function>odbx_lo_close</function>()</member>
+			</simplelist>
+		</para>
+	</refsect1>
+
+</refentry>
+
+		</chapter>
+	</book>
+
+</set>

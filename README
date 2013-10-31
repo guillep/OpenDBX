@@ -1,0 +1,64 @@
+OpenDBX Readme:
+
+1. Building the package
+2. Installing the package
+3. Using the OpenDBX library
+4. Create DEB and RPM packages
+
+
+1. Building the package:
+
+Do a ./configure --with-backends="<backends>" in the directory of the extracted
+package. Replace '<backends>' by your favorite backend, e.g. pgsql for PostgreSQL
+or mysql for MySQL. The command ./configure --with-backends="mysql pgsql" will
+build both - provided you have the client libraries installed.
+
+The ./configure script tests your system if everything is available needed by the
+OpenDBX library and the choosen backends. If something is not found because it's
+not installed in the usual location, prepend CPPFLAGS="-I<include path>" where
+path is pointing to the include files and LDFLAGS="-L<lib path>" where path is
+pointing to the libraries, e.g.
+
+CPPFLAGS="-I/opt/mysql" LDFLAGS="-L/opt/mysql" ./configure --with-backends="mysql"
+
+to configure OpenDBX and the MySQL backend with the include and lib in
+/opt/mysql. "make" will build both libraries according to these settings.
+
+
+2. Install the package
+
+The simplest way is to execute "make install" (as root) to copy the files
+to the default location. If you haven't changed this (./configure --help explains
+how to do this), they will be copied to /usr/local/include and /usr/local/lib.
+
+
+3. Using the OpenDBX library
+
+If you've written a program interfacing the OpenDBX library, simply add -lopendbx
+as gcc parameter while linking your program. If the library isn't installed in
+one of the directories the library loader is searching for, you can either add
+the path to the LD_LIBRARY_PATH before execution of your programm or add add it
+to your /etc/ld.so.conf file and run ldconfig afterwards.
+
+
+4. Create DEB and RPM packages
+
+The OpenDBX tarball is prepared to build distribution specific packages in DEB
+and RPM format. The Debian package is build by unpacking the tar file and
+invoking the following command in the OpenDBX directory on the command line:
+
+fakeroot debian/rules binary
+
+It will build the OpenDBX library and the mysql, pgsql, sqlite, sqlite3,
+firebird, mssql and sybase backends (the last two by using the FreeTDS library).
+
+Creating RPM packages is as easy as building the Debian package. Simply execute
+
+rpmbuild -ta opendbx-x.x.x.tar.gz
+
+with the correct name of the package file. This will build the OpenDBX library
+and the mysql, pgsql and sqlite3 backends by default. You can change the
+backends which will be build by supplying values to the --with=... and
+--without=... command line options available for the rpmbuild command, e.g.
+
+rpmbuild -ta --with=mssql --without=mysql --without=pgsql opendbx-x.x.x.tar.gz

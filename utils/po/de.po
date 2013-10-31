@@ -1,0 +1,138 @@
+# German translations for opendbx package.
+# Copyright (C) 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the opendbx package.
+#  <norbert@linuxnetworks.de>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: opendbx 1.3.7\n"
+"Report-Msgid-Bugs-To: norbert@linuxnetworks.de\n"
+"POT-Creation-Date: 2012-06-10 23:58+0200\n"
+"PO-Revision-Date: 2008-04-04 00:18+0200\n"
+"Last-Translator:  <norbert@linuxnetworks.de>\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: utils/commands.cpp:31
+msgid "Unknown command, use .help to list available commands"
+msgstr ""
+"Unbekannter Befehl. Benutzen Sie .help für eine Liste der verfügbaren Befehle"
+
+#: utils/commands.cpp:42
+msgid "Printing column names is now enabled"
+msgstr "Spaltennamen werden jetzt ausgegeben"
+
+#: utils/commands.cpp:45
+msgid "Printing column names is now disabled"
+msgstr "Spaltennamen werden jetzt nicht mehr ausgegeben"
+
+#: utils/commands.cpp:54
+msgid "Available commands:"
+msgstr "Verfügbare Befehle:"
+
+#: utils/commands.cpp:55
+msgid "toggle printing column names for result sets"
+msgstr "Spaltennamen für Ergebnislisten ein-/ausschalten"
+
+#: utils/commands.cpp:56 utils/odbx-sql.cpp:194
+msgid "print this help"
+msgstr "Diese Hilfe ausgeben"
+
+#: utils/commands.cpp:57
+msgid "exit program"
+msgstr "Programm beenden"
+
+#: utils/commands.cpp:64
+msgid "Good bye"
+msgstr "Auf Wiedersehen"
+
+#: utils/odbx-sql.cpp:128
+msgid "Interactive SQL shell, use .help to list available commands"
+msgstr ""
+"Interaktive SQL Eingabeaufforderung.\n"
+"Geben Sie .help für eine Liste der verfügbaren Befehle ein"
+
+#: utils/odbx-sql.cpp:169
+msgid "Warning: "
+msgstr "Warnung: "
+
+#: utils/odbx-sql.cpp:195
+msgid "name of the backend or path to the backend library"
+msgstr "Treibername oder Verzeichnispfad zur Treiberbibliothek"
+
+#: utils/odbx-sql.cpp:196
+msgid "read configuration from file"
+msgstr "Name der Konfigurationsdatei"
+
+#: utils/odbx-sql.cpp:197
+msgid "database name or database file name"
+msgstr "Datenbankname oder Dateiname der Datenbank"
+
+#: utils/odbx-sql.cpp:198
+#, fuzzy
+msgid "start/end field delimiter in output"
+msgstr "Zeichen, das einzelne Felder in der Ausgabe umschliesst"
+
+#: utils/odbx-sql.cpp:199
+msgid "host name, IP address or path to the database server"
+msgstr "Name, Adresse oder Verzeichnispfad des Datenbankservers"
+
+#: utils/odbx-sql.cpp:200
+msgid "interactive mode"
+msgstr "Interaktiver Modus"
+
+#: utils/odbx-sql.cpp:201
+msgid "SQL keyword file for command completion"
+msgstr "SQL Schlüsselwortdatei für Befehlsvervollständigung"
+
+#: utils/odbx-sql.cpp:202
+msgid "port name or number of the database server"
+msgstr "Portname oder -nummer des Datenbankservers"
+
+#: utils/odbx-sql.cpp:203
+msgid "separator between fields in output"
+msgstr "Trennzeichen zwischen Feldern in der Ausgabe"
+
+#: utils/odbx-sql.cpp:204
+msgid "user name for authentication"
+msgstr "Benutzername für Authentifizierung"
+
+#: utils/odbx-sql.cpp:205
+msgid "with prompt asking for the passphrase"
+msgstr "Eingabeaufforderung für Passwort anzeigen"
+
+#: utils/odbx-sql.cpp:218
+msgid "Password: "
+msgstr "Passwort: "
+
+#: utils/odbx-sql.cpp:245
+msgid "Error: "
+msgstr "Fehler: "
+
+#: utils/odbx-sql.cpp:250
+msgid "Error: Caught unknown exception"
+msgstr "Fehler: Es ist eine unbekannte Ausnahme aufgetreten"
+
+#~ msgid "Configuration file parameter is mandatory"
+#~ msgstr "Der Parameter für die Konfigurationsdatei ist zwingend erforderlich"
+
+#~ msgid "Unable to initialize configuration file parser"
+#~ msgstr "Der Konfigurationsparser konnte nicht initialisiert werden"
+
+#~ msgid "Read and execute semicolon-terminated SQL statements from stdin"
+#~ msgstr ""
+#~ "Führt durch Strichpunkt getrennte SQL Anweisungen von der "
+#~ "Eingabeaufforderung aus"
+
+#~ msgid "Usage: "
+#~ msgstr "Benutzung: "
+
+#~ msgid "start/end delimiter for fields in output"
+#~ msgstr "Zeichen, das einzelne Felder in der Ausgabe umschliesst"
+
+#, fuzzy
+#~ msgid "print table header in output"
+#~ msgstr "Trennzeichen zwischen Feldern in der Ausgabe"

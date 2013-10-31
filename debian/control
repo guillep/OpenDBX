@@ -1,0 +1,120 @@
+Source: libopendbx
+Priority: optional
+Maintainer: Norbert Sendetzky <norbert@linuxnetworks.de>
+Build-Depends: autoconf, automake, autotools-dev, debhelper (>= 4.0.0), libtool, libmysqlclient-dev, libpq-dev, libsqlite0-dev, libsqlite3-dev, firebird2.5-dev | firebird2.1-dev | firebird2.0-dev | firebird2-dev | firebird1.5-dev, freetds-dev, unixodbc-dev | libiodbc2-dev, libreadline-dev, libncurses-dev | libncurses5-dev, docbook2x, doxygen
+Build-Conflicts: autoconf2.13, automake1.4
+Standards-Version: 3.7.3.0
+Section: libs
+
+Package: libopendbx1
+Priority: optional
+Section: libs
+Architecture: any
+Depends: libopendbx1-backend, ${shlibs:Depends}
+Description: Lightweight database access abstraction layer
+ OpenDBX provides a simple and lightweight API for interfacing native
+ relational database APIs in a consistent way. By using the OpenDBX API you
+ don't have to adapt your program to the different database APIs by yourself.
+
+Package: libopendbx1-dev
+Priority: optional
+Section: libdevel
+Architecture: any
+Depends: libopendbx1 (= ${binary:Version})
+Provides: libopendbx-dev
+Conflicts: libopendbx-dev
+Description: Lightweight database access abstraction layer (dev)
+ OpenDBX provides a simple and lightweight API for interfacing native
+ relational database APIs in a consistent way. By using the OpenDBX API you
+ don't have to adapt your program to the different database APIs by yourself.
+ This package contains the header file to develop backends for libopendbx
+
+Package: libopendbx1-firebird
+Priority: optional
+Section: libs
+Architecture: any
+Depends: libopendbx1 (= ${binary:Version}), ${shlibs:Depends}
+Provides: libopendbx1-backend
+Description: Firebird backend for OpenDBX
+ This package contains the Firebird backend for the OpenDBX
+ database access abstraction layer.
+
+Package: libopendbx1-mssql
+Priority: optional
+Section: libs
+Architecture: any
+Depends: libopendbx1 (= ${binary:Version}), ${shlibs:Depends}
+Provides: libopendbx1-backend
+Description: MSSQL backend for OpenDBX
+ This package contains the MSSQL backend for the OpenDBX
+ database access abstraction layer.
+
+Package: libopendbx1-mysql
+Priority: optional
+Section: libs
+Architecture: any
+Depends: libopendbx1 (= ${binary:Version}), ${shlibs:Depends}
+Provides: libopendbx1-backend
+Description: MySQL backend for OpenDBX
+ This package contains the MySQL backend for the OpenDBX
+ database access abstaction layer.
+
+Package: libopendbx1-odbc
+Priority: optional
+Section: libs
+Architecture: any
+Depends: libopendbx1 (= ${binary:Version}), ${shlibs:Depends}
+Provides: libopendbx1-backend
+Description: ODBC backend for OpenDBX
+ This package contains the ODBC backend for the OpenDBX
+ database access abstaction layer.
+
+Package: libopendbx1-pgsql
+Priority: optional
+Section: libs
+Architecture: any
+Depends: libopendbx1 (= ${binary:Version}), ${shlibs:Depends}
+Provides: libopendbx1-backend
+Description: PostgreSQL backend for OpenDBX
+ This package contains the PostgreSQL backend for the OpenDBX
+ database access abstraction layer.
+
+Package: libopendbx1-sqlite
+Priority: optional
+Section: libs
+Architecture: any
+Depends: libopendbx1 (= ${binary:Version}), ${shlibs:Depends}
+Provides: libopendbx1-backend
+Description: SQLite backend for OpenDBX
+ This package contains the SQLite backend for the OpenDBX
+ database access abstraction layer.
+
+Package: libopendbx1-sqlite3
+Priority: optional
+Section: libs
+Architecture: any
+Depends: libopendbx1 (= ${binary:Version}), ${shlibs:Depends}
+Provides: libopendbx1-backend
+Description: SQLite3 backend for OpenDBX
+ This package contains the SQLite3 backend for the OpenDBX
+ database access abstraction layer.
+
+Package: libopendbx1-sybase
+Priority: optional
+Section: libs
+Architecture: any
+Depends: libopendbx1 (= ${binary:Version}), ${shlibs:Depends}
+Provides: libopendbx1-backend
+Description: Sybase ctlib backend for OpenDBX
+ This package contains the Sybase backend for the OpenDBX
+ database access abstraction layer.
+
+Package: opendbx-utils
+Priority: optional
+Section: utils
+Architecture: any
+Depends: libopendbx1 (>= ${binary:Version}), ${shlibs:Depends}
+Provides: opendbx-utils
+Description: Utility applications using libopendbx
+ This package provides utility applications for accessing database content
+ directly via libopendbx

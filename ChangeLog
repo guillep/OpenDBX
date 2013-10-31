@@ -1,0 +1,442 @@
+2012-06-10 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Bugfix: Fixed memory leak in mysql backend when connecting to the server failed (thanks to Stefan Meinecke)
+	* Bugfix: Fixed handling of NULL indicator in MSSQL backend if NULL is returned in a row
+	* Bugfix: Added workaround for PostgreSQL in case of an error (e.g. if the server is gone) to give back a correct error status
+	* Bugfix: Return ODBX_ROW_DONE in sqlite3_odbx_row_fetch() when calling this function after no more rows are available (due to SQLite3 change)
+	* Bugfix: Added -lintl if required for fixing build problems when using MinGW on Windows platforms
+	* Bugfix: Added ENABLE_BROKEN to Oracle descriptor for enabling keep-alive
+	* Bugfix: Added unbind() to Conn::finish() if it's not called before
+	* Bugfix: Increased buffer for time stamps in ODBC backend to allow fractions of seconds to be stored without an error
+	* Feature: Enhanced determination of column types in SQLite3 backend when SQLite returns a NULL value
+	* Feature: Improved recovery from errors in odbx-sql utility
+	* Change: Updated libtool to 2.2.6b
+
+2010-04-19 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Change: Changed required autoconf version to 2.61
+	* Change: Modified spec file to build firebird, mssql and sybase backends on supported plattforms by default
+	* Bugfix: Fixed reference counting of objects in libopendbxplus (thanks to Rodolfo Lima)
+	* Bugfix: Removed ODBC connection attributes which don't work with Windows ODBC
+	* Bugfix: Fixed wrong error severity in mssql backend when connection couldn't be established
+	* Bugfix: Fixed wild pointer in oracle backend that my lead to problems when error handling isn't implemented correctly
+	* Bugfix: Fixed checking for highest error constant so last error message will be displayed correctly
+	* Bugfix: Adapted spec file for OpenSUSE build service
+
+2009-09-30 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Change: Changed mysql_real_connect options so odbx_rows_affected() is in line with other backends
+	* Change: Don't set sql_mode in mysql backend if mode is an empty string (for MySQL < 4.1)
+	* Bugfix: Fixed segmentation fault in mysql backend in threaded environments
+	* Bugfix: Fixed mysql_real_connect options to keep options on reconnect
+	* Bugfix: Fixed uninitialized variables in sqlite3 backend which may lead to a segfault
+	* Bugfix: Cleanup connection in mysql backend if setting mode failed during odbx_bind()
+	* Bugfix: Fixed several problems in RPM spec file
+
+2009-09-02 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Bugfix: Fixed lost statements in sqlite3 backend if an error or a timeout occured
+	* Bugfix: Fixed building dynamic firebird and mysql backend libraries on Windows platforms
+	* Bugfix: Fixed pgsql backend support for timeouts in odbx_result() on Windows platforms
+	* Bugfix: Fixed UTF-8 encoding of data in oracle backend on Windows platforms
+	* Bugfix: Added workaround for RHEL and CentOS in spec file
+	* Bugfix: Fixed spec file for building on x86_64 platform
+	* Bugfix: Fixed used library for libopendbxplus
+	* Bugfix: Fixed odbc package in spec file
+
+2009-08-07 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: Added MySQL MinGW workaround for easy compilation of MySQL backend on Windows plattforms
+	* Bugfix: Removed old config.{cpp,hpp} files from generating gettext files
+	* Bugfix: Use sqlite3_prepare_v2() for improved error management in sqlite3 backend
+	* Bugfix: Fixed singlelib builds for mysql and interbase on Win32
+	* Bugfix: Fixed warning in firebird_odbx_error()
+
+2009-06-02 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: Added pkgconfig file for OpenDBX C++ library
+	* Change: Moved C++ doc generation to "doc/" subdirectory
+	* Bugfix: Fixed configure to build MySQL backend on Windows plattforms
+	* Bugfix: Fixed masked global errno variable in MySQL backend
+	* Bugfix: Check for -lz which might be necessary for MySQL backend
+	* Bugfix: Fixed configure to build Oracle backend on Windows plattforms
+	* Bugfix: Fixed configure to build Sybase backend on Windows plattforms
+	* Bugfix: Correctly check for ODBC library on Windows plattforms
+	* Bugfix: Used unitialized variable in Win32 DLL loader (thanks to Markus Fritsche)
+	* Bugfix: Rewritten Win32 DLL loader to prevent problem with SQLite (thanks to Mariano Martinez Peck)
+	* Bugfix: Fixed warning in firebird backend when using newer Firebird libraries
+	* Bugfix: Check for Interbase gds32 library if fbclient isn't found
+	* Bugfix: Fixed compilation of odbxtest on MacOSX (thanks to Michael Atkisson)
+	* Bugfix: Added OpenDBX C++ libary to spec file
+
+2009-03-02 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: Use Doxygen for generating C++ API
+	* Change: Fully documented C++ functions
+	* Change: Specified thrown exceptions for all C++ functions
+	* Change: Used interfaces for all C++ implementation classes
+	* Change: Made C++ get*() functions in OpenDBX::Exception constant
+	* Change: Made return value of Result::columnName() constant
+	* Change: C++ implementation class variables are private now
+	* Change: Used already existing C++ functions for functions with different parameter types
+	* Change: Cleanup inside C++ API functions
+	* Change: Added checks for libreadline and libncurses when the utilities should be build
+	* Change: Added update statements in regression for testing statements which affects no rows
+	* Bugfix: odbc_odbx_query() returned wrong code if a statement affected no rows (thanks to Mariano Martinez Peck)
+	* Bugfix: Fixed memleak in mysql backend during finishing connections (thanks to Zhao Tongyi)
+	* Bugfix: Fixed timeout calculation in sqlite3_odbx_query() (thanks to Mariano Martinez Peck)
+	* Bugfix: Workaround for interupted select() call in pgsql backend (thanks to Mariano Martinez Peck)
+	* Bugfix: Added destructor for Result_Impl class to clean up if an exception is thrown
+	* Bugfix: Added checks for Conn::escape() functions if connection instance wasn't initialized correctly
+	* Bugfix: Added copy constructors for all objects which are responsible for reference handling
+	* Bugfix: Protect C++ objects against self assignment
+	* Bugfix: Fixed build on windows with MinGW
+	* Bugfix: odbx-sql can now be built without gettext
+	* Bugfix: Added workaround necessary for building the odbc backend using MinGW
+	* Bugfix: Missing Conn::unbind() in odbxplustest
+
+2008-10-22 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: Utilities and test suite is compiled by default but can be disabled via ./configure option
+	* Feature: Increased gcc-4.3 compability (thanks to Sven Wegener)
+	* Feature: Updated spec file and added packages for odbc backend and utilities
+	* Feature: Added check for valid TLS options
+	* Feature: Builds on Solaris
+	* Change: Removed dependency on libconfuse using ArgMap
+	* Change: Removed unnecessary include of sys/select.h in mysql backend
+	* Change: Mssql backend is thread safe
+	* Change: Used db2x command directly to generate man pages
+	* Bugfix: Timeouts are now optional in pgsql backend so it compiles on Win32 platforms
+	* Bugfix: Fixed severity level for error types in mssql backend (fix for FreeTDS for 0.82)
+	* Bugfix: Oracle backend doesn't return an error if odbx_row_fetch() is called more often than necessary
+	* Bugfix: Fixed memory leak in mssql backend which occured in odbx_finish()
+	* Bugfix: Supports concurrent make jobs now while building RPM files
+	* Bugfix: Builds cleanly on systems where an old version of the OpenDBX library is already installed
+
+2008-06-12 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: Builds on Win32 platform using Cygwin or MinGW
+	* Feature: firebird, sqlite3 backend don't return an error if odbx_row_fetch() is called more often than necessary
+	* Feature: Conn::finish(), Result::finish() and Lob::close() for cleaning up objects safely
+	* Feature: odbx_query() can calculate the statement length on its own
+	* Feature: Inline C++ API documentation (Javadoc style)
+	* Feature: odbx-sql prints column names for result sets
+	* Change: Moved type parameter in Conn::create() to the end and made it optional
+	* Change: Made port in Conn::Conn() and who/cred in Conn::bind() optional
+	* Change: Shortend and streamlined Exception methods
+	* Change: odbx_result() uses constant instead of number
+	* Bugfix: Fixed memory leak in sqlite3 backend if SQL statement is invalid
+	* Bugfix: Fixed firebird and odbc backend when compiled as single lib
+	* Bugfix: Added odbx-sql man page to install script
+	* Bugfix: Cleanup in doc directories doesn't fail anymore if no files are available
+
+2008-05-23 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: Added auto completion of SQL keywords in odbx-sql
+	* Feature: Fetch all outstanding rows in odbx_result_finish()
+	* Feature: Man page for odbx_lo_*() functions and odbx_result_finish()
+	* Feature: Man page for odbx-sql
+	* Change: Made OpenDBX::Result::getResult() parameters optional
+	* Change: Updated OpenDBX header in man pages
+	* Bugfix: sqlite3 backend returns correct error message now if database file couldn't be opened
+	* Bugfix: Fixed error type for invalid database files in sqlite3 backend
+	* Bugfix: Frees all outstanding result sets in Result::~Result() now
+	* Bugfix: Fixed memory leak in odbc_odbx_result_finish()
+	* Bugfix: Correct temporal data types in odbc_odbx_column_type() when using PostgreSQL ODBC adapter
+	* Bugfix: Added missing stdlib.h to odbc backend
+	* Bugfix: Fixed delimters and separators in odbx-sql
+
+2008-05-01 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: Full-featured ODBC backend
+	* Feature: Added Result::columnPos() function for mapping column names to positions
+	* Change: Shortend column and field member function names in OpenDBX::Result
+	* Bugfix: odbx_escape() didn't work anymore after the change in version 1.3.7
+	* Bugfix: sqlite3_get_option() returns correct value for ODBX_OPT_THREAD_SAFE
+	* Bugfix: Fixed memory leak on timeout in sqlite3_odbx_result()
+	* Bugfix: Fixed timeout handling in sqlite3 backend
+	* Bugfix: Correct timeout value in sqlite backend
+
+2008-04-05 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: odbx_result_finish() can return error conditions and replaces odbx_result_free()
+	* Feature: Added lob write function to lob extension for Firebird and Oracle
+	* Feature: odbx-sql history remembers complete statements
+	* Feature: Gettext support and german translation for odbx-sql
+	* Feature: Extended regression testing for retrieving results and rows
+	* Feature: Include C and C++ example application in regression test
+	* Change: odbx_result_free() is now depricated
+	* Change: Removed Stmt::bind() from libopendbxplus as it won't work with prepared stmt API
+	* Change: Moved Stmt::escape() to Conn::escape()
+	* Bugfix: Ported Bugfixes from release 1.2.5
+	* Bugfix: Escape backslashes as well in odbx_escape() default implementation
+	* Bugfix: Class Odbx::Result() was able to cause a segfault on error conditions
+	* Bugfix: Cleanup outstanding results in Odbx::~Result() if available
+	* Bugfix: Correct order of backend library loading (user supplied first)
+	* Bugfix: sqlite3_odbx_result() returned wrong code if called on finished statement
+	* Bugfix: Timeout of odbx_result() works correctly in sqlite3 backend now
+	* Bugfix: gettext works if locales are in non-standard directory
+	* Bugfix: odbx-sql accessed already freed string
+	* Bugfix: Fixed include and library path for odbx-sql
+	* Bugfix: Added missing define for setenv() in oracle backend
+	* Bugfix: Oracle backend returns correct error message if server is unavailable
+
+2008-02-24 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: New odbx-sql utility for execution of SQL statements from the shell
+	* Feature: Richer API for libopendbxplus
+	* Change: Moved opendbx/api.hpp to opendbx/api
+	* Change: Switched parameter position for Conn::create()
+	* Change: Changed signature for Stmt::bind()
+
+2008-02-03 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: ODBC backend prototype
+	* Feature: Added header file names to ./configure error output if not found
+	* Change: Fixed warnings displayed by new gcc compiler
+	* Bugfix: wrong errors in odbx-regression.c were possible
+	* Bugfix: removed unnecessary -ldl for backends and -lz for libmysqlbackend
+	* Bugfix: documentation updates
+
+2007-08-06 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: C++ API for large object functions
+	* Feature: added missing Conn::getCapability()
+	* Feature: path to backend library can be supplied in backend parameter of odbx_init()
+	* Feature: regression test for libopendbxplus
+	* Change: odbx_lo_open() requires odbx_result_t* instead of odbx_t*
+	* Change: changed visibility of libopendbxplus class variables to "protected"
+	* Change: removed "lib/" in front of local header includes
+	* Change: Added license statements to all files
+	* Bugfix: pgsql backend returned wrong boolean values if odbx_field_value() is called twice
+	* Bugfix: libopendbxplus exception returned wrong error
+
+2007-07-09 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: new C++ OpenDBX library (libopendbxplus)
+	* Change: new directory layout for include files: /usr/include/opendbx/api.{h,hpp}
+	* Bugfix: removed commas from the end of the enumerator lists
+
+2007-06-07 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: added enum declariations for all constants to enable strict type checking
+	* Feature: defined constants for odbx_result and odbx_row_fetch return values
+	* Feature: added support for new MySQL decimal type in mysql backend
+	* Feature: added Docbook documentation from OpenDBX 1.2.3 package
+	* Bugfix: fixed memory leak in firebird backend lob implementation
+
+2007-03-28 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: added large object interface (read-only)
+	* Feature: firebird backend supports lob interface
+	* Change: refactored backends in interface, basic and "large object" parts
+	* Change: replaced stdint.h by inttypes.h and removed config.h dependency in odbx.h
+
+2007-03-11 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: update from latest stable branch
+	* Feature: added option --enable-singlelib to build one library including the backends
+	* Feature: library and api version are available via odbx_get_option()
+	* Feature: mysql backend supports socket connections via host string
+	* Feature: mssql, mysql, pgsql and sybase backends support connection timeout via odbx_{get,set}_option()
+	* Feature: mssql backend works with FreeTDS 0.63 but without ANSI features
+	* Feature: mssql backend supports timeouts for odbx_result()
+	* Change: added new error code for invalid handles (severe error type)
+	* Change: odbx_error_type() returns success for returned values greater than zero
+	* Bugfix: fixed decimal type in firebird backend
+	* Bugfix: fixed date type in mssql backend
+
+2007-01-20 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: only configured backends are used with ODBX_STATIC
+	* Bugfix: wrong sqlite3 define in configure.ac
+
+2006-12-20 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: updated language files, German translation
+	* Bugfix: fixed warnings in Oracle backend
+
+2006-12-09 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: updated spec file
+	* Feature: check for memset function
+	* Bugfix: sqlite3_odbx_result() created an infinite loop if a backend error occured
+	* Bugfix: removed memleak in sqlite_odbx_finish() and sqlite3_odbx_finish()
+	* Bugfix: removed memleak in mysql_set_privmode()
+	* Bugfix: added missing free in firebird_odbx_finish()
+
+2006-10-14 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: mssql backend optimization
+	* Feature: sybase backend optimization
+	* Feature: mysql backend supports ODBX_TLS_TRY
+	* Feature: host is optional in firebird backend
+	* Change: code cleanups in several backends
+	* Change: compares pointer always to NULL
+	* Change: replaced ODBX_* types by ODBX_TYPE_*
+	* Bugfix: fixed off by one bug in odbx_escape()
+	* Bugfix: pgsql backend returned wrong code for empty queries
+	* Bugfix: uninitialized host variable in mysql_odbx_init() if host was NULL
+
+2006-09-23 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: Oracle backend for OCI 8, 9 and 10
+	* Feature: compiles now on Solaris
+	* Feature: updated configure.ac and more checks
+
+2006-09-09 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Bugfix: firebird backend failed on parameter checking in firebird_odbx_bind()
+	* Bugfix: fixed length of malloc()'ed columns in firebird backend
+	* Feature: new sybase backend for Sybase ASE servers
+	* Feature: ARRAY type support for pgsql
+	* Change: renamed freetds backend (using dblib) to mssql
+	* Change: introduced ODBX_TYPE_* for further use
+	* Change: removed ODBX_DEPRICATED for now
+
+2006-08-25 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Bugfix: fixed clash with errno function in odbx.h
+	* Bugfix: freetds backend checks for NULL pointer in message and error handler
+	* Bugfix: freetds backend returns correct number of affected rows
+	* Bugfix: freetds backend date/time/timestamp were not in ISO format
+	* Bugfix: altered check for freetds in configure (freetds' libsybdb doesn't always provide the dbopen symbol)
+	* Bugfix: firebird backend checks for max. number of nested transactions
+	* Bugfix: firebird backend fixes bug in host/port init code
+	* Feature: support for different modes in backends (SQL, ANSI SQL, proprietary, etc)
+	* Feature: MySQL server operates in ANSI SQL mode by default
+	* Feature: freetds (MSSQL/Sybase) server operate in ANSI SQL mode by default (dates and identifier quotes)
+	* Feature: freetds backend compiles with Sybase dblib library
+	* Feature: firebird backend uses isolation level "read committed" by default
+
+2006-08-10 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Bugfix: fixed segfault when odbx_finish() is called (thanks to Clizio Merli)
+	* Bugfix: pgsql backend boolean values return now 1/0 instead of true and false
+	* Bugfix: pgsql backend wasn't aware of clob types
+	* Bugfix: mysql backend didn't distinguish between clob and blob types
+	* Bugfix: firebird backend failed on using transactions
+	* Bugfix: firebird backend returned wrong type for CHAR columns
+	* Bugfix: firebird backend formating for decimal values was wrong
+	* Bugfix: firebird backend date, time and timestamp values were not strings in ISO format
+	* Bugfix: odbxtest works without installed libraries and with disabled static build
+	* Feature: added odbxtest.* scripts for regression tesing
+	* Change: odbx_field_bind() was removed because it couldn't be supported by all backends
+
+2006-07-03 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: firebird backend is fully functional
+	* Feature: odbx_error_type() function to distinguish fatal/non-fatal errors
+	* Change: odbx_field_bind() is subject to change in the next release
+
+2006-06-27 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Bugfix: package contains a working spec file
+	* Feature: provides generic escape implementation for backends
+	* Feature: Win32 DLL loader support (who's able to provide a MSVC project file?)
+	* Change: introduced ODBX_DEPRICATED to hide depricated functions by default
+	* Change: reworked autoconf/automake support
+	* Change: Streamlined defines
+	* Change: Update from stable branch
+
+2006-06-10 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* New: FreeTDS backend (MSSQL and Sybase support)
+	* New: Firebird backend prototype (with limited functionality up to now)
+	* New: odbx_bind() for supporting different bind methods in the future
+	* New: odbx_field_bind() for providing binary values directly
+	* Change: odbx_bind_simple() is set to depricated
+	* Change: Update from stable branch
+
+2006-03-19 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Bugfix: FreeBSD fix for dynamic linking (libdl)
+	* Bugfix: Used freed memory in mysql_bind_simple() after rebinding
+	* Feature: MySQL host and port are now optional
+
+2006-01-26 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Feature: Localization (gettext) support
+	* Bugfix: odbx_finish() returns more error codes for different types of errors
+	* Change: Minor cleanups
+
+
+2005-12-31 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Bugfix: The OBBX_ERR_BACKEND define was definitively wrong
+	* Bugfix: Additional check for handle and backend in odbx_init()
+	* Feature: ISO C99 clean and no more warnings in -pedantic mode
+	* Feature: Use of defines for error codes in all backends
+
+
+2005-10-01 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* API Change: SQL2003 data types are now returned by odbx_field_type()
+	* API Change: odbx_field_{count,name,type}() are renamed to odbx_column_{count,name,type}() for clarification
+	* Change: functions were renamed to *_odbx_*() instead of e.g. mysql_*() to prevent name clashes
+	* Bugfix: mysql data structure was uninitialized when calling mysql_odbx_set_option()
+	* Bugfix: Added mysql_thread_end() in mysql_odbx_finish() to prevent memory leaks
+
+
+2005-09-15 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Bugfix: mysql_field_length() returned the length of the column, not the length of the current field
+	* Bugfix: (char*) to (const char*) {pgsql,sqlite}_field_name() and {pgsql,sqlite}_field_value()
+	* Feature: use libmysqlclient_r if present
+	* Feature: pkgconfig file is included
+
+
+2005-08-04 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Bugfix: NULL value handling in pgsql module
+	* Minor api change: changed return value for odbx_field_name() and odbx_field_value() from (char*) to (const char*)
+
+
+2005-07-17 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* SQLite3 support
+
+
+2004-08-18 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* Double delete in odbx:mysql_finish() caused segfault on PowerPC
+	* Moved mysql_init() to odbx:mysql_bind_simple(), prevented rebinding
+
+
+2004-08-02 Norbert Sendetzky <norbert@linuxnetworks.de>
+
+	* SQLite support
+	* Improved error handling
+	* PostgreSQL backend fix: Empty result caused infinite loop
+	* Removed libltdl (not thread safe), used custom way instead
+
+
+OpenDBX 0.8:
+- libtool libltdl support for portability
+- enhanced error checking
+- deb build scripts and rpm spec
+
+OpenDBX 0.7:
+- get/set option support
+- SSL support in mysql and pgsql backends
+
+OpenDBX 0.6:
+- support for conditional builds
+
+OpenDBX 0.5:
+- MySQL support
+
+OpenDBX 0.4:
+- support for querying backend capabilities
+- pgsqlbackend code cleanup
+
+OpenDBX 0.3:
+- minimized visible library symbols
+
+OpenDBX 0.2:
+- autoconf, automake and libtool to simplify builds
+
+OpenDBX 0.1:
+- initial release
+- PostgreSQL support
+

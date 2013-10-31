@@ -1,0 +1,14 @@
+OpenDBX developers and contributors
+
+Main developers:
+- Norbert Sendetzky
+  (mysql, pgsql, sqlite, sqlite3, firebird, mssql,
+  sybase, oracle, odbc, interface, maintenance)
+
+Contributors:
+- Kees Monshouwer
+  (excellent spec file for building rpm packages)
+- Mariano Martinez Peck
+  (much testing especially on Windows)
+- Sven Wegener
+  (gcc compatibilty improvements)

@@ -1,0 +1,113 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: opendbx 1.4.6\n"
+"Report-Msgid-Bugs-To: norbert@linuxnetworks.de\n"
+"POT-Creation-Date: 2012-06-10 23:58+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: utils/commands.cpp:31
+msgid "Unknown command, use .help to list available commands"
+msgstr ""
+
+#: utils/commands.cpp:42
+msgid "Printing column names is now enabled"
+msgstr ""
+
+#: utils/commands.cpp:45
+msgid "Printing column names is now disabled"
+msgstr ""
+
+#: utils/commands.cpp:54
+msgid "Available commands:"
+msgstr ""
+
+#: utils/commands.cpp:55
+msgid "toggle printing column names for result sets"
+msgstr ""
+
+#: utils/commands.cpp:56 utils/odbx-sql.cpp:194
+msgid "print this help"
+msgstr ""
+
+#: utils/commands.cpp:57
+msgid "exit program"
+msgstr ""
+
+#: utils/commands.cpp:64
+msgid "Good bye"
+msgstr ""
+
+#: utils/odbx-sql.cpp:128
+msgid "Interactive SQL shell, use .help to list available commands"
+msgstr ""
+
+#: utils/odbx-sql.cpp:169
+msgid "Warning: "
+msgstr ""
+
+#: utils/odbx-sql.cpp:195
+msgid "name of the backend or path to the backend library"
+msgstr ""
+
+#: utils/odbx-sql.cpp:196
+msgid "read configuration from file"
+msgstr ""
+
+#: utils/odbx-sql.cpp:197
+msgid "database name or database file name"
+msgstr ""
+
+#: utils/odbx-sql.cpp:198
+msgid "start/end field delimiter in output"
+msgstr ""
+
+#: utils/odbx-sql.cpp:199
+msgid "host name, IP address or path to the database server"
+msgstr ""
+
+#: utils/odbx-sql.cpp:200
+msgid "interactive mode"
+msgstr ""
+
+#: utils/odbx-sql.cpp:201
+msgid "SQL keyword file for command completion"
+msgstr ""
+
+#: utils/odbx-sql.cpp:202
+msgid "port name or number of the database server"
+msgstr ""
+
+#: utils/odbx-sql.cpp:203
+msgid "separator between fields in output"
+msgstr ""
+
+#: utils/odbx-sql.cpp:204
+msgid "user name for authentication"
+msgstr ""
+
+#: utils/odbx-sql.cpp:205
+msgid "with prompt asking for the passphrase"
+msgstr ""
+
+#: utils/odbx-sql.cpp:218
+msgid "Password: "
+msgstr ""
+
+#: utils/odbx-sql.cpp:245
+msgid "Error: "
+msgstr ""
+
+#: utils/odbx-sql.cpp:250
+msgid "Error: Caught unknown exception"
+msgstr ""

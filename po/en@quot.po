@@ -1,0 +1,117 @@
+# English translations for opendbx package.
+# Copyright (C) 2012 Free Software Foundation, Inc.
+# This file is distributed under the same license as the opendbx package.
+# Automatically generated, 2012.
+#
+# All this catalog "translates" are quotation characters.
+# The msgids must be ASCII and therefore cannot contain real quotation
+# characters, only substitutes like grave accent (0x60), apostrophe (0x27)
+# and double quote (0x22). These substitutes look strange; see
+# http://www.cl.cam.ac.uk/~mgk25/ucs/quotes.html
+#
+# This catalog translates grave accent (0x60) and apostrophe (0x27) to
+# left single quotation mark (U+2018) and right single quotation mark (U+2019).
+# It also translates pairs of apostrophe (0x27) to
+# left single quotation mark (U+2018) and right single quotation mark (U+2019)
+# and pairs of quotation mark (0x22) to
+# left double quotation mark (U+201C) and right double quotation mark (U+201D).
+#
+# When output to an UTF-8 terminal, the quotation characters appear perfectly.
+# When output to an ISO-8859-1 terminal, the single quotation marks are
+# transliterated to apostrophes (by iconv in glibc 2.2 or newer) or to
+# grave/acute accent (by libiconv), and the double quotation marks are
+# transliterated to 0x22.
+# When output to an ASCII terminal, the single quotation marks are
+# transliterated to apostrophes, and the double quotation marks are
+# transliterated to 0x22.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: opendbx 1.4.6\n"
+"Report-Msgid-Bugs-To: norbert@linuxnetworks.de\n"
+"POT-Creation-Date: 2012-06-10 23:58+0200\n"
+"PO-Revision-Date: 2012-06-10 23:58+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/odbx.c:21
+msgid "Success"
+msgstr "Success"
+
+#: lib/odbx.c:22
+msgid "Backend error occured"
+msgstr "Backend error occured"
+
+#: lib/odbx.c:23
+msgid "Invalid capability"
+msgstr "Invalid capability"
+
+#: lib/odbx.c:24 backends/sqlite3/sqlite3_basic.c:53
+msgid "Invalid parameter"
+msgstr "Invalid parameter"
+
+#: lib/odbx.c:25
+msgid "Out of memory"
+msgstr "Out of memory"
+
+#: lib/odbx.c:26
+msgid "Incorrect size of allocated memory"
+msgstr "Incorrect size of allocated memory"
+
+#: lib/odbx.c:27
+msgid "Loading backend library failed"
+msgstr "Loading backend library failed"
+
+#: lib/odbx.c:28
+msgid "Operation is not available"
+msgstr "Operation is not available"
+
+#: lib/odbx.c:29
+msgid "Invalid option"
+msgstr "Invalid option"
+
+#: lib/odbx.c:30
+msgid "Option is read only"
+msgstr "Option is read only"
+
+#: lib/odbx.c:31
+msgid "Setting option failed"
+msgstr "Setting option failed"
+
+#: lib/odbx.c:32
+msgid "Waiting for result failed"
+msgstr "Waiting for result failed"
+
+#: lib/odbx.c:33
+msgid "Not supported"
+msgstr "Not supported"
+
+#: lib/odbx.c:34 backends/oracle/oracle_basic.c:56
+msgid "Invalid handle"
+msgstr "Invalid handle"
+
+#: lib/odbxlib.c:148
+#, c-format
+msgid "Loading backend library %s, %s or %s failed"
+msgstr "Loading backend library %s, %s or %s failed"
+
+#: lib/odbxlib.c:235
+#, c-format
+msgid "Loading backend library %s, %s or %s failed\n"
+msgstr "Loading backend library %s, %s or %s failed\n"
+
+#: backends/mssql/mssql_basic.c:52
+msgid "Connecting to server failed"
+msgstr "Connecting to server failed"
+
+#: backends/sqlite/sqlite_basic.c:53 backends/sqlite3/sqlite3_basic.c:54
+msgid "Opening database failed"
+msgstr "Opening database failed"
+
+#: backends/sqlite3/sqlite3_basic.c:52
+msgid "Unknown error"
+msgstr "Unknown error"

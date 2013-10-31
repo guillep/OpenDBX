@@ -1,0 +1,95 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: opendbx 1.4.6\n"
+"Report-Msgid-Bugs-To: norbert@linuxnetworks.de\n"
+"POT-Creation-Date: 2012-06-10 23:58+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: lib/odbx.c:21
+msgid "Success"
+msgstr ""
+
+#: lib/odbx.c:22
+msgid "Backend error occured"
+msgstr ""
+
+#: lib/odbx.c:23
+msgid "Invalid capability"
+msgstr ""
+
+#: lib/odbx.c:24 backends/sqlite3/sqlite3_basic.c:53
+msgid "Invalid parameter"
+msgstr ""
+
+#: lib/odbx.c:25
+msgid "Out of memory"
+msgstr ""
+
+#: lib/odbx.c:26
+msgid "Incorrect size of allocated memory"
+msgstr ""
+
+#: lib/odbx.c:27
+msgid "Loading backend library failed"
+msgstr ""
+
+#: lib/odbx.c:28
+msgid "Operation is not available"
+msgstr ""
+
+#: lib/odbx.c:29
+msgid "Invalid option"
+msgstr ""
+
+#: lib/odbx.c:30
+msgid "Option is read only"
+msgstr ""
+
+#: lib/odbx.c:31
+msgid "Setting option failed"
+msgstr ""
+
+#: lib/odbx.c:32
+msgid "Waiting for result failed"
+msgstr ""
+
+#: lib/odbx.c:33
+msgid "Not supported"
+msgstr ""
+
+#: lib/odbx.c:34 backends/oracle/oracle_basic.c:56
+msgid "Invalid handle"
+msgstr ""
+
+#: lib/odbxlib.c:148
+#, c-format
+msgid "Loading backend library %s, %s or %s failed"
+msgstr ""
+
+#: lib/odbxlib.c:235
+#, c-format
+msgid "Loading backend library %s, %s or %s failed\n"
+msgstr ""
+
+#: backends/mssql/mssql_basic.c:52
+msgid "Connecting to server failed"
+msgstr ""
+
+#: backends/sqlite/sqlite_basic.c:53 backends/sqlite3/sqlite3_basic.c:54
+msgid "Opening database failed"
+msgstr ""
+
+#: backends/sqlite3/sqlite3_basic.c:52
+msgid "Unknown error"
+msgstr ""

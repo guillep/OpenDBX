@@ -1,0 +1,59 @@
+#
+# OpenDBX regression test
+#
+# This file contains the backends to test and the database
+# parameter which should be used for each test
+#
+
+# Backends to test
+#ODBXTEST_BACKENDS="firebird mssql mysql oracle pgsql sqlite sqlite3 sybase"
+ODBXTEST_BACKENDS=""
+
+
+FIREBIRD_HOST="localhost"
+FIREBIRD_PORT="3050"
+FIREBIRD_DATABASE="/var/lib/firebird2/data/odbx.gdb"
+FIREBIRD_USERNAME=""
+FIREBIRD_PASSWORD=""
+
+MSSQL_HOST="SRV2k3"
+MSSQL_PORT=""
+MSSQL_DATABASE="odbx"
+MSSQL_USERNAME=""
+MSSQL_PASSWORD=""
+
+MYSQL_HOST="localhost"
+MYSQL_PORT="3306"
+MYSQL_DATABASE="odbx"
+MYSQL_USERNAME=""
+MYSQL_PASSWORD=""
+
+ORACLE_HOST="localhost"
+ORACLE_PORT="1521"
+ORACLE_DATABASE="odbx"
+ORACLE_USERNAME=""
+ORACLE_PASSWORD=""
+
+PGSQL_HOST="localhost"
+PGSQL_PORT=""
+PGSQL_DATABASE="odbx"
+PGSQL_USERNAME=""
+PGSQL_PASSWORD=""
+
+SQLITE_HOST="./"
+SQLITE_PORT=""
+SQLITE_DATABASE="odbx.sq2"
+SQLITE_USERNAME=""
+SQLITE_PASSWORD=""
+
+SQLITE3_HOST="./"
+SQLITE3_PORT=""
+SQLITE3_DATABASE="odbx.sq3"
+SQLITE3_USERNAME=""
+SQLITE3_PASSWORD=""
+
+SYBASE_HOST="ASEHOST"
+SYBASE_PORT=""
+SYBASE_DATABASE="odbx"
+SYBASE_USERNAME=""
+SYBASE_PASSWORD=""

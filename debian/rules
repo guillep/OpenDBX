@@ -1,0 +1,131 @@
+#!/usr/bin/make -f
+
+package		:= libopendbx1
+backends		:= firebird mssql mysql pgsql odbc sqlite sqlite3 sybase
+includes		:= -I/usr/include/mysql -I/usr/include/postgresql
+tmpdir			:= debian/tmp
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+export DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+export DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
+	CONFFLAGS = --build $(DEB_HOST_GNU_TYPE)
+else
+	CONFFLAGS = --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
+endif
+
+
+CFLAGS = -Wall -pedantic -std=c99 -g
+CXXFLAGS = -Wall -pedantic -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+	CXXFLAGS += -O0
+else
+	CFLAGS += -O2
+	CXXFLAGS += -O2
+endif
+
+
+build:
+	dh_testdir
+
+	CPPFLAGS="${includes} ${CPPFLAGS}" \
+	CFLAGS="${CFLAGS}" \
+	CXXFLAGS="${CXXFLAGS}" \
+	./configure ${CONFFLAGS} \
+		--prefix=/usr \
+		--disable-rpath \
+		--with-backends="${backends}"
+
+	$(MAKE)
+	touch build-stamp
+
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	$(MAKE) install DESTDIR="${CURDIR}/${tmpdir}"
+
+
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+
+	dh_installdocs -p${package}
+	dh_installchangelogs -p${package} ChangeLog
+	dh_installman -p${package}-dev ${tmpdir}/usr/share/man/man3/*
+
+	dh_install -p${package} "${tmpdir}/usr/lib/libopendbx.so.*" "usr/lib/"
+	dh_install -p${package} "${tmpdir}/usr/lib/libopendbxplus.so.*" "usr/lib/"
+	dh_install -p${package} --autodest "${tmpdir}/usr/share/locale/*/*/opendbx.mo"
+	dh_install -p${package}-dev "${tmpdir}/usr/include/opendbx/api" "usr/include/opendbx"
+	dh_install -p${package}-dev "${tmpdir}/usr/include/opendbx/api.h" "usr/include/opendbx"
+	dh_install -p${package}-dev "${tmpdir}/usr/lib/libopendbx.so" "${tmpdir}/usr/lib/libopendbx.*a" "usr/lib/"
+	dh_install -p${package}-dev "${tmpdir}/usr/lib/libopendbxplus.so" "${tmpdir}/usr/lib/libopendbxplus.*a" "usr/lib/"
+	dh_install -p${package}-dev "opendbx.pc" "usr/lib/pkgconfig/"
+	dh_link -p${package}-dev "usr/share/doc/${package}" "usr/share/doc/${package}-dev"
+	dh_link -p${package}-dev "usr/include/opendbx/api.h" "usr/include/odbx.h"
+	@set -e ; \
+	for be in ${backends} ; do \
+		dh_install  -p${package}-$${be} "${tmpdir}/usr/lib/opendbx/lib$${be}backend.so*" "usr/lib/opendbx/" ; \
+		dh_link -p${package}-$${be} "usr/share/doc/${package}" "usr/share/doc/${package}-$${be}" ; \
+	done
+	dh_installman -popendbx-utils ${tmpdir}/usr/share/man/man1/*
+	dh_install -popendbx-utils "${tmpdir}/usr/bin/odbx-sql" "usr/bin/"
+	dh_install -popendbx-utils --autodest "${tmpdir}/usr/share/locale/*/*/opendbx-utils.mo"
+	dh_install -popendbx-utils "${tmpdir}/usr/share/opendbx/keywords" "usr/share/opendbx/"
+
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+
+	dh_makeshlibs --exclude=backend
+	dh_installdeb
+	dh_shlibdeps
+	dh_md5sums
+
+	dh_gencontrol -p${package}
+	dh_builddeb -p${package}
+	dh_gencontrol -p${package}-dev
+	dh_builddeb -p${package}-dev
+	@set -e ; \
+	for be in ${backends} ; do \
+		dh_gencontrol -p${package}-$${be} ; \
+		dh_builddeb  -p${package}-$${be} ; \
+	done
+	dh_gencontrol -popendbx-utils
+	dh_builddeb -popendbx-utils
+
+
+binary-indep:
+
+
+binary: binary-arch binary-indep
+
+
+clean:
+	rm -f build-stamp
+	rm -f debian/files
+
+	dh_testdir
+	dh_testroot
+
+	-$(MAKE) distclean
+	autoreconf --force
+
+	dh_clean
+
+
+.PHONY: binary binary-arch binary-indep build clean install
+

@@ -1,0 +1,135 @@
+# English translations for opendbx package.
+# Copyright (C) 2012 Free Software Foundation, Inc.
+# This file is distributed under the same license as the opendbx package.
+# Automatically generated, 2012.
+#
+# All this catalog "translates" are quotation characters.
+# The msgids must be ASCII and therefore cannot contain real quotation
+# characters, only substitutes like grave accent (0x60), apostrophe (0x27)
+# and double quote (0x22). These substitutes look strange; see
+# http://www.cl.cam.ac.uk/~mgk25/ucs/quotes.html
+#
+# This catalog translates grave accent (0x60) and apostrophe (0x27) to
+# left single quotation mark (U+2018) and right single quotation mark (U+2019).
+# It also translates pairs of apostrophe (0x27) to
+# left single quotation mark (U+2018) and right single quotation mark (U+2019)
+# and pairs of quotation mark (0x22) to
+# left double quotation mark (U+201C) and right double quotation mark (U+201D).
+#
+# When output to an UTF-8 terminal, the quotation characters appear perfectly.
+# When output to an ISO-8859-1 terminal, the single quotation marks are
+# transliterated to apostrophes (by iconv in glibc 2.2 or newer) or to
+# grave/acute accent (by libiconv), and the double quotation marks are
+# transliterated to 0x22.
+# When output to an ASCII terminal, the single quotation marks are
+# transliterated to apostrophes, and the double quotation marks are
+# transliterated to 0x22.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: opendbx 1.4.6\n"
+"Report-Msgid-Bugs-To: norbert@linuxnetworks.de\n"
+"POT-Creation-Date: 2012-06-10 23:58+0200\n"
+"PO-Revision-Date: 2012-06-10 23:58+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: utils/commands.cpp:31
+msgid "Unknown command, use .help to list available commands"
+msgstr "Unknown command, use .help to list available commands"
+
+#: utils/commands.cpp:42
+msgid "Printing column names is now enabled"
+msgstr "Printing column names is now enabled"
+
+#: utils/commands.cpp:45
+msgid "Printing column names is now disabled"
+msgstr "Printing column names is now disabled"
+
+#: utils/commands.cpp:54
+msgid "Available commands:"
+msgstr "Available commands:"
+
+#: utils/commands.cpp:55
+msgid "toggle printing column names for result sets"
+msgstr "toggle printing column names for result sets"
+
+#: utils/commands.cpp:56 utils/odbx-sql.cpp:194
+msgid "print this help"
+msgstr "print this help"
+
+#: utils/commands.cpp:57
+msgid "exit program"
+msgstr "exit program"
+
+#: utils/commands.cpp:64
+msgid "Good bye"
+msgstr "Good bye"
+
+#: utils/odbx-sql.cpp:128
+msgid "Interactive SQL shell, use .help to list available commands"
+msgstr "Interactive SQL shell, use .help to list available commands"
+
+#: utils/odbx-sql.cpp:169
+msgid "Warning: "
+msgstr "Warning: "
+
+#: utils/odbx-sql.cpp:195
+msgid "name of the backend or path to the backend library"
+msgstr "name of the backend or path to the backend library"
+
+#: utils/odbx-sql.cpp:196
+msgid "read configuration from file"
+msgstr "read configuration from file"
+
+#: utils/odbx-sql.cpp:197
+msgid "database name or database file name"
+msgstr "database name or database file name"
+
+#: utils/odbx-sql.cpp:198
+msgid "start/end field delimiter in output"
+msgstr "start/end field delimiter in output"
+
+#: utils/odbx-sql.cpp:199
+msgid "host name, IP address or path to the database server"
+msgstr "host name, IP address or path to the database server"
+
+#: utils/odbx-sql.cpp:200
+msgid "interactive mode"
+msgstr "interactive mode"
+
+#: utils/odbx-sql.cpp:201
+msgid "SQL keyword file for command completion"
+msgstr "SQL keyword file for command completion"
+
+#: utils/odbx-sql.cpp:202
+msgid "port name or number of the database server"
+msgstr "port name or number of the database server"
+
+#: utils/odbx-sql.cpp:203
+msgid "separator between fields in output"
+msgstr "separator between fields in output"
+
+#: utils/odbx-sql.cpp:204
+msgid "user name for authentication"
+msgstr "user name for authentication"
+
+#: utils/odbx-sql.cpp:205
+msgid "with prompt asking for the passphrase"
+msgstr "with prompt asking for the passphrase"
+
+#: utils/odbx-sql.cpp:218
+msgid "Password: "
+msgstr "Password: "
+
+#: utils/odbx-sql.cpp:245
+msgid "Error: "
+msgstr "Error: "
+
+#: utils/odbx-sql.cpp:250
+msgid "Error: Caught unknown exception"
+msgstr "Error: Caught unknown exception"

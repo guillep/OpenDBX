@@ -1,0 +1,9 @@
+TODO for the next releases
+
+Release 1.5.x
+- Prepared statement interface
+- IBM DB2 backend
+
+Release 1.7.x
+- Ingres backend
+- Informix backend
