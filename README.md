@@ -1,4 +1,0 @@
-OpenDBX
-=======
-
-OpenDBX driver
