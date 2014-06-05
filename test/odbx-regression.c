@@ -199,7 +199,7 @@ int main( int argc, char* argv[] )
 			unsigned long len = 128;
 			int err;
 
-			if( ( err = odbx_escape( handle[0], value, strlen( value ), escaped, &len ) ) != 0 )
+			if( ( err = odbx_escape( handle[k], value, strlen( value ), escaped, &len ) ) != 0 )
 			{
 				fprintf( stderr, "Error in odbx_escape(): %s\n", odbx_error( handle[k], err ) );
 				break;

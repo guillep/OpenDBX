@@ -1,3 +1,19 @@
+2013-10-03  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* configure.ac (AM_GNU_GETTEXT_VERSION): Bump to 0.18.1.
+
+2013-10-03  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* m4/gettext.m4: Upgrade to gettext-0.18.1.
+	* m4/iconv.m4: Upgrade to gettext-0.18.1.
+	* m4/lib-ld.m4: Upgrade to gettext-0.18.1.
+	* m4/lib-link.m4: Upgrade to gettext-0.18.1.
+	* m4/lib-prefix.m4: Upgrade to gettext-0.18.1.
+	* m4/nls.m4: Upgrade to gettext-0.18.1.
+	* m4/po.m4: Upgrade to gettext-0.18.1.
+	* m4/progtest.m4: Upgrade to gettext-0.18.1.
+	* configure.ac (AM_GNU_GETTEXT_VERSION): Bump to 0.18.1.
+
 2012-06-10 Norbert Sendetzky <norbert@linuxnetworks.de>
 
 	* Bugfix: Fixed memory leak in mysql backend when connecting to the server failed (thanks to Stefan Meinecke)
