@@ -11,4 +11,4 @@ endif
 
 libpgsqlbackend_la_SOURCES = pgsqlbackend.h pgsqlbackend.c pgsql_basic.h pgsql_basic.c
 libpgsqlbackend_la_CPPFLAGS += -DAPINUMBER=@APINUMBER@ $(AM_CPPFLAGS)
-libpgsqlbackend_la_LIBADD = -l@LIBPGSQL@
+libpgsqlbackend_la_LIBADD = -l@LIBPGSQL@ -lintl
